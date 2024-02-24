@@ -18,4 +18,6 @@ public partial class Schem
     public string UpdatedBy { get; set; } = null!;
 
     public DateTime UpdatedAt { get; set; }
+
+    public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 }

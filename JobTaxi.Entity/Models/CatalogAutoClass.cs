@@ -22,4 +22,6 @@ public partial class CatalogAutoClass
     public string UpdatedBy { get; set; } = null!;
 
     public string? NameView { get; set; }
+
+    public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 }

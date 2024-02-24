@@ -15,6 +15,10 @@ public partial class TaxiAdministrationContext : DbContext
     {
     }
 
+    public virtual DbSet<Car> Cars { get; set; }
+
+    public virtual DbSet<CarsPicture> CarsPictures { get; set; }
+
     public virtual DbSet<CatalogAutoClass> CatalogAutoClasses { get; set; }
 
     public virtual DbSet<ControlsRestrictionType> ControlsRestrictionTypes { get; set; }
@@ -77,6 +81,90 @@ public partial class TaxiAdministrationContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Car>(entity =>
+        {
+            entity.ToTable("cars");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Active)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("active");
+            entity.Property(e => e.CarName)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("car_name");
+            entity.Property(e => e.CarYandexTaxoparkId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("car_yandex_taxopark_id");
+            entity.Property(e => e.CatalogAutoClassId).HasColumnName("catalog_auto_class_id");
+            entity.Property(e => e.Color)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("color");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.IsCarsGiven).HasColumnName("is_cars_given");
+            entity.Property(e => e.IsLoadedFromYandex).HasColumnName("is_loaded_from_yandex");
+            entity.Property(e => e.Model)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("model");
+            entity.Property(e => e.Number)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("number");
+            entity.Property(e => e.ParkId).HasColumnName("park_id");
+            entity.Property(e => e.PriceForDay).HasColumnName("price_for_day");
+            entity.Property(e => e.SchemId).HasColumnName("schem_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+            entity.Property(e => e.Year).HasColumnName("year");
+
+            entity.HasOne(d => d.CatalogAutoClass).WithMany(p => p.Cars)
+                .HasForeignKey(d => d.CatalogAutoClassId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_cars_catalog_auto_class");
+
+            entity.HasOne(d => d.Park).WithMany(p => p.Cars)
+                .HasForeignKey(d => d.ParkId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_cars_parks");
+
+            entity.HasOne(d => d.Schem).WithMany(p => p.Cars)
+                .HasForeignKey(d => d.SchemId)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_cars_schems");
+        });
+
+        modelBuilder.Entity<CarsPicture>(entity =>
+        {
+            entity.ToTable("cars_pictures");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CarId).HasColumnName("car_id");
+            entity.Property(e => e.Picture).HasColumnName("picture");
+
+            entity.HasOne(d => d.Car).WithMany(p => p.CarsPictures)
+                .HasForeignKey(d => d.CarId)
+                .HasConstraintName("FK_cars_pictures_cars");
+        });
+
         modelBuilder.Entity<CatalogAutoClass>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_catalog_auto_class_ID");

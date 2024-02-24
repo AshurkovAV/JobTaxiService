@@ -67,6 +67,8 @@ public partial class Park
 
     public int? CreatedUserId { get; set; }
 
+    public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
+
     public virtual UsersWeb? CreatedUser { get; set; }
 
     public virtual FirstDay FirstDay { get; set; } = null!;
