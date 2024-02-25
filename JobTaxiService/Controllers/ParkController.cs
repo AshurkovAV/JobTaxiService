@@ -1,6 +1,7 @@
 using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace JobTaxiService.Controllers
 {
@@ -23,9 +24,11 @@ namespace JobTaxiService.Controllers
         {
             var result = new List<Park>();
             var resultParks = _jobRepository.GetParks();
+            _logger.LogInformation(resultParks.Count().ToString());
             foreach (var park in resultParks)
             {
                 var cars = _jobRepository.GetCar().Where(x=>x.ParkId == park.Id).ToList();
+                _logger.LogInformation(park.ParkName);
                 park.Cars = cars;
                 foreach (var car in cars) {
                     var carsPictures = _jobRepository.GetCarsPicture().Where(x => x.CarId == car.Id).ToList();
