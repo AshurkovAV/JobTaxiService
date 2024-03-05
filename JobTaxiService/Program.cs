@@ -1,4 +1,5 @@
 using JobTaxi.Entity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 //Внедряем зависимость
 builder.Services.AddSingleton<IJobRepository, JobRepository>();
+
+
 
 var app = builder.Build();
 

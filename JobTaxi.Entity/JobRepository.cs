@@ -1,9 +1,18 @@
 ﻿using JobTaxi.Entity.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace JobTaxi.Entity
 {
     public class JobRepository : IJobRepository
     {
+        private readonly IConfiguration _configuration;
+        private readonly string _stringconnect;
+
+        public JobRepository(IConfiguration configuration) {
+            _configuration = configuration;
+            string con = configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
+            
+        }
         public IEnumerable<CatalogAutoClass> GetCatalogAutoClasses()
         {
             var result = new List<CatalogAutoClass>();
