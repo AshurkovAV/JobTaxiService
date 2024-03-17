@@ -1,17 +1,35 @@
 ﻿using JobTaxi.Entity.Models;
+using Microsoft.Extensions.Logging;
 
 namespace JobTaxi.Entity
 {
     public class JobRepository : IJobRepository
     {
+        private readonly ILogger<JobRepository> _logger;
+
+        public JobRepository(ILoggerFactory loggerFactory) 
+        {
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            var logger = loggerFactory.CreateLogger("FileLogger");
+            _logger = logger;
+        }
+
         public IEnumerable<CatalogAutoClass> GetCatalogAutoClasses()
         {
             var result = new List<CatalogAutoClass>();
-            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            try
             {
-                var parks = db.CatalogAutoClasses.ToList();
-                result = parks;
+                using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+                {
+                    var parks = db.CatalogAutoClasses.ToList();
+                    result = parks;
+                }
             }
+            catch (Exception ex)
+            {
+                logger.LogInformation("Processing {0}", ex.Message);
+            }
+            
             return result;
         }
 
