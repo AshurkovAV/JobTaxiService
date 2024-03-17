@@ -9,7 +9,8 @@ builder.Services.AddControllers();
 //Внедряем зависимость
 builder.Services.AddSingleton<IJobRepository, JobRepository>();
 
-
+//builder.Configuration.SetBasePath(Directory.GetCurrentDirectory());
+//builder.Configuration.AddJsonFile("appsettings.json");
 
 var app = builder.Build();
 

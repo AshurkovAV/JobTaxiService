@@ -8,9 +8,9 @@ namespace JobTaxi.Entity
         private readonly IConfiguration _configuration;
         private readonly string _stringconnect;
 
-        public JobRepository(IConfiguration configuration) {
-            _configuration = configuration;
-            string con = configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
+        public JobRepository() {
+            //_configuration = configuration;
+            //string con = configuration.GetSection("ConnectionStrings:DefaultConnection").Value;
             
         }
         public IEnumerable<CatalogAutoClass> GetCatalogAutoClasses()
