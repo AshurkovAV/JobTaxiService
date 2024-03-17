@@ -77,7 +77,7 @@ public partial class TaxiAdministrationContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=31.129.99.228;Database=taxi_administration;User Id=sa;Password=StartPlus6;encrypt=false;TrustServerCertificate=false;");
+        => optionsBuilder.UseSqlServer("Server=jsbmrcldff;Database=taxi_administration;User Id=sa;Password=StartPlus6;encrypt=false;TrustServerCertificate=false;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,7 +1,7 @@
 using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using JobTaxi.Entity.Log;
 
 namespace JobTaxiService.Controllers
 {
@@ -9,13 +9,16 @@ namespace JobTaxiService.Controllers
     [Route("[controller]")]
     public class ParkController : ControllerBase
     {
-        private readonly ILogger<ParkController> _logger;
+        private readonly ILogger _logger;
         private readonly IJobRepository _jobRepository;
-        public ParkController(ILogger<ParkController> logger,
+        public ParkController(
+            ILoggerFactory loggerFactory,
             IJobRepository jobRepository)
-        {
-            _logger = logger;
+        {            
             _jobRepository = jobRepository;
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            var logger = loggerFactory.CreateLogger("JobRepository");
+            _logger = logger;
         }
 
         [HttpGet]
@@ -23,6 +26,7 @@ namespace JobTaxiService.Controllers
         public async Task<IEnumerable<Park>> Get()
         {
             var result = new List<Park>();
+            _logger.LogInformation("GetPark");
             var resultParks = _jobRepository.GetParks();
             _logger.LogInformation(resultParks.Count().ToString());
             foreach (var park in resultParks)
@@ -32,7 +36,8 @@ namespace JobTaxiService.Controllers
                 park.Cars = cars;
                 foreach (var car in cars) {
                     var carsPictures = _jobRepository.GetCarsPicture().Where(x => x.CarId == car.Id).ToList();
-                    car.CarsPictures = carsPictures;                    
+                    car.CarsPictures = carsPictures;
+                    _logger.LogInformation("GetCarsPicture");
                 }
             }
             result = (List<Park>)resultParks;
