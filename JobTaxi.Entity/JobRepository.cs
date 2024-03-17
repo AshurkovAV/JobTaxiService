@@ -1,16 +1,17 @@
-﻿using JobTaxi.Entity.Models;
+﻿using JobTaxi.Entity.Log;
+using JobTaxi.Entity.Models;
 using Microsoft.Extensions.Logging;
 
 namespace JobTaxi.Entity
 {
     public class JobRepository : IJobRepository
     {
-        private readonly ILogger<JobRepository> _logger;
+        private readonly ILogger _logger;
 
         public JobRepository(ILoggerFactory loggerFactory) 
         {
             loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
-            var logger = loggerFactory.CreateLogger("FileLogger");
+            var logger = loggerFactory.CreateLogger("JobRepository");
             _logger = logger;
         }
 
@@ -27,7 +28,7 @@ namespace JobTaxi.Entity
             }
             catch (Exception ex)
             {
-                logger.LogInformation("Processing {0}", ex.Message);
+                _logger.LogInformation("Processing {0}", ex.Message);
             }
             
             return result;
@@ -36,10 +37,17 @@ namespace JobTaxi.Entity
         public IEnumerable<Park> GetParks()
         {
             var result = new List<Park>();
-            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            try
             {
-                var parks = db.Parks.ToList();
-                result = parks;
+                using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+                {
+                    var parks = db.Parks.ToList();
+                    result = parks;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Processing {0}", ex.Message);
             }
             return result;
         }
