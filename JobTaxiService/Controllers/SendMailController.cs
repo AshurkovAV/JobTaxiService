@@ -14,33 +14,31 @@ namespace JobTaxiService.Controllers
         {
             try
             {
-                // отправитель - устанавливаем адрес и отображаемое в письме имя
-                
-                MailAddress from = new MailAddress("ashurkovav@yandex.ru", "Server");
+                // отправитель - устанавливаем адрес и отображаемое в письме имя                
+                MailAddress from = new MailAddress("ashurkovav@yandex.ru", "таксиработааренда.рф");
                 // кому отправляем
-                MailAddress to = new MailAddress("ashurkovav@yandex.ru", "Client");
+                MailAddress to = new MailAddress("den.podkosov@mail.ru", "Client");
                 // создаем объект сообщения
-                MailMessage m = new MailMessage(to, from);
+                MailMessage m = new MailMessage(from, to);
                 // тема письма
-                m.Subject = "Тест";
+                m.Subject = "Денис, привет. Тест прошел успешно";
                 // текст письма
-                m.Body = "<h2>Письмо-тест работы smtp-клиента</h2>";
+                m.Body = "<h2>Письмо-тест работы smtp-клиента yandex</h2>";
                 // письмо представляет код html
                 m.IsBodyHtml = true;
                 // адрес smtp-сервера и порт, с которого будем отправлять письмо
-                using (SmtpClient smtp = new SmtpClient())
+                using (SmtpClient smtp = new SmtpClient("smtp.yandex.ru", 587))
                 {
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Port = 465;
-                    smtp.Host = "smtp.yandex.ru";
-                    // логин и пароль
-                    smtp.Credentials = new NetworkCredential(to.Address, "kuurhptaxeckviyc");
-                    smtp.Timeout = 90000;
                     smtp.EnableSsl = true;
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    Thread.Sleep(1000);
+                    smtp.UseDefaultCredentials = false;
+                    // логин и пароль
+                    smtp.Credentials = new NetworkCredential("ashurkovav", "bljbyqjxmdbkuwgy");
+                    smtp.Timeout = 900000;
+                    Thread.Sleep(500);
                     smtp.Send(m);
-                    Console.Read();
+                    Console.WriteLine("Сообщенине успешно отправлено");
+                    return true;
                 }
                 
             }
