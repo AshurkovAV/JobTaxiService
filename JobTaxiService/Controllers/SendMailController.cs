@@ -46,15 +46,9 @@ namespace JobTaxiService.Controllers
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                     smtp.UseDefaultCredentials = false;
                     smtp.Credentials = new NetworkCredential(to.Address, "kuurhptaxeckviyc");
-                    smtp.Port = 587;
-                    smtp.Host = "smtp.yandex.ru";
-                    // логин и пароль   
-                    smtp.EnableSsl = true;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;                   
                     smtp.Send(m);
-                    Console.WriteLine("Сообщенине успешно отправлено");
-                    return true;
                     Console.WriteLine("Соообщение отправлено" + mail.EmailBody);
+                    return true;                    
                 }
             }
             catch (Exception ex)
