@@ -45,7 +45,7 @@ namespace JobTaxiService.Controllers
                     smtp.EnableSsl = true;
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                     smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential(to.Address, "kuurhptaxeckviyc");
+                    smtp.Credentials = new NetworkCredential(from.Address, "kfoavuebmrejiwzr");
                     smtp.Send(m);
                     Console.WriteLine("Соообщение отправлено" + mail.EmailBody);
                     return true;                    
