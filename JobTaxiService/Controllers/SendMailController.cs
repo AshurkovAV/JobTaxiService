@@ -1,10 +1,7 @@
-﻿using JobTaxi.Entity.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Net.Mail;
 using System.Net;
-using System.Text.Json.Serialization;
 using JobTaxiService.Dto;
-using System.Net.Http.Json;
 using Newtonsoft.Json;
 
 namespace JobTaxiService.Controllers
@@ -55,9 +52,7 @@ namespace JobTaxiService.Controllers
             {
                 Console.WriteLine(ex.ToString());
                 return false;
-            }
-
-            return true;
+            }            
         }       
     }
 }
