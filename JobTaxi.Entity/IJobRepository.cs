@@ -8,5 +8,8 @@ namespace JobTaxi.Entity
         public IEnumerable<CatalogAutoClass> GetCatalogAutoClasses();
         public IEnumerable<Car> GetCar();
         public IEnumerable<CarsPicture> GetCarsPicture();
+        public UserToken InsertUserToken(UserToken user);
+        public User InsertUser(User user);
+        public User GetUser(string deviceId);
     }
 }

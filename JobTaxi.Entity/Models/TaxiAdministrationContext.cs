@@ -23,15 +23,13 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<ControlsRestrictionType> ControlsRestrictionTypes { get; set; }
 
+    public virtual DbSet<Driver> Drivers { get; set; }
+
     public virtual DbSet<DriversConstraint> DriversConstraints { get; set; }
 
     public virtual DbSet<FirstDay> FirstDays { get; set; }
 
     public virtual DbSet<FlagsValue> FlagsValues { get; set; }
-
-    public virtual DbSet<LocalRole> LocalRoles { get; set; }
-
-    public virtual DbSet<LocalUser> LocalUsers { get; set; }
 
     public virtual DbSet<LoginFailedAttempt> LoginFailedAttempts { get; set; }
 
@@ -39,7 +37,13 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<ModulesWeb> ModulesWebs { get; set; }
 
+    public virtual DbSet<Offer> Offers { get; set; }
+
     public virtual DbSet<Park> Parks { get; set; }
+
+    public virtual DbSet<ParksDriversConstraint> ParksDriversConstraints { get; set; }
+
+    public virtual DbSet<ParksWorkCondition> ParksWorkConditions { get; set; }
 
     public virtual DbSet<ProductVersion> ProductVersions { get; set; }
 
@@ -55,9 +59,11 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<Schem> Schems { get; set; }
 
-    public virtual DbSet<TaxiCompany> TaxiCompanies { get; set; }
-
     public virtual DbSet<Update> Updates { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<UserToken> UserTokens { get; set; }
 
     public virtual DbSet<UsersErrorsLog> UsersErrorsLogs { get; set; }
 
@@ -77,10 +83,12 @@ public partial class TaxiAdministrationContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=jsbmrcldff;Database=taxi_administration;User Id=sa;Password=StartPlus6;encrypt=false;TrustServerCertificate=false;");
+        => optionsBuilder.UseSqlServer("Server=31.129.99.228;Database=taxi_administration;User ID=sa;Password=StartPlus6;encrypt=false");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("Cyrillic_General_CI_AS");
+
         modelBuilder.Entity<Car>(entity =>
         {
             entity.ToTable("cars");
@@ -228,6 +236,51 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("RESTRICTION_TITLE");
         });
 
+        modelBuilder.Entity<Driver>(entity =>
+        {
+            entity.ToTable("drivers");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Dr)
+                .HasColumnType("date")
+                .HasColumnName("dr");
+            entity.Property(e => e.Fam)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("fam");
+            entity.Property(e => e.Im)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("im");
+            entity.Property(e => e.Ot)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasColumnName("ot");
+            entity.Property(e => e.Phone)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("phone");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+        });
+
         modelBuilder.Entity<DriversConstraint>(entity =>
         {
             entity.ToTable("drivers_constraints");
@@ -291,7 +344,7 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<FlagsValue>(entity =>
         {
             entity.HasKey(e => e.Code)
-                .HasName("PK__flags_va__AA1D4379ADF52908")
+                .HasName("PK__flags_va__AA1D4379A4A63AFC")
                 .IsClustered(false);
 
             entity.ToTable("flags_values");
@@ -305,111 +358,10 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("VAL");
         });
 
-        modelBuilder.Entity<LocalRole>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("local_role");
-
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("active");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(64)
-                .HasDefaultValueSql("('system')")
-                .HasColumnName("created_by");
-            entity.Property(e => e.Description)
-                .HasMaxLength(250)
-                .HasColumnName("description");
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Ip4)
-                .HasDefaultValueSql("((2130706433))")
-                .HasColumnName("ip4");
-            entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .HasColumnName("name");
-            entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy)
-                .HasMaxLength(64)
-                .HasDefaultValueSql("('system')")
-                .HasColumnName("updated_by");
-        });
-
-        modelBuilder.Entity<LocalUser>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("local_user");
-
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("active");
-            entity.Property(e => e.ConfNumber)
-                .HasMaxLength(200)
-                .HasColumnName("conf_number");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(64)
-                .HasDefaultValueSql("('system')")
-                .HasColumnName("created_by");
-            entity.Property(e => e.Email)
-                .HasMaxLength(200)
-                .HasColumnName("email");
-            entity.Property(e => e.FirstName)
-                .HasMaxLength(200)
-                .HasColumnName("first_name");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
-            entity.Property(e => e.Image).HasColumnName("image");
-            entity.Property(e => e.Ip4)
-                .HasDefaultValueSql("((2130706433))")
-                .HasColumnName("ip4");
-            entity.Property(e => e.LastName)
-                .HasMaxLength(200)
-                .HasColumnName("last_name");
-            entity.Property(e => e.Login)
-                .HasMaxLength(200)
-                .HasColumnName("login");
-            entity.Property(e => e.Pass)
-                .HasMaxLength(200)
-                .HasColumnName("pass");
-            entity.Property(e => e.Patronymic)
-                .HasMaxLength(200)
-                .HasColumnName("patronymic");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(200)
-                .HasColumnName("phone");
-            entity.Property(e => e.RoleId).HasColumnName("role_id");
-            entity.Property(e => e.Salt)
-                .HasMaxLength(200)
-                .HasColumnName("salt");
-            entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy)
-                .HasMaxLength(64)
-                .HasDefaultValueSql("('system')")
-                .HasColumnName("updated_by");
-        });
-
         modelBuilder.Entity<LoginFailedAttempt>(entity =>
         {
             entity.HasKey(e => e.Id)
-                .HasName("PK__login_fa__3214EC262454A229")
+                .HasName("PK__login_fa__3214EC261A9F6640")
                 .IsClustered(false);
 
             entity.ToTable("login_failed_attempts");
@@ -437,7 +389,7 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<MenuWeb>(entity =>
         {
             entity.HasKey(e => e.MenuId)
-                .HasName("PK__menu_web__6C47297844DF8433")
+                .HasName("PK__menu_web__6C472978C72FEB74")
                 .IsClustered(false);
 
             entity.ToTable("menu_web");
@@ -468,7 +420,7 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<ModulesWeb>(entity =>
         {
             entity.HasKey(e => e.ModuleId)
-                .HasName("PK__modules___238A8247E6633DD1")
+                .HasName("PK__modules___238A82479952FFD4")
                 .IsClustered(false);
 
             entity.ToTable("modules_web");
@@ -483,6 +435,42 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("MODULE_NAME");
+        });
+
+        modelBuilder.Entity<Offer>(entity =>
+        {
+            entity.ToTable("offers");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.DriverId).HasColumnName("driver_id");
+            entity.Property(e => e.ParkId).HasColumnName("park_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+
+            entity.HasOne(d => d.Driver).WithMany(p => p.Offers)
+                .HasForeignKey(d => d.DriverId)
+                .HasConstraintName("FK_offers_drivers");
+
+            entity.HasOne(d => d.Park).WithMany(p => p.Offers)
+                .HasForeignKey(d => d.ParkId)
+                .HasConstraintName("FK_offers_parks");
         });
 
         modelBuilder.Entity<Park>(entity =>
@@ -550,6 +538,11 @@ public partial class TaxiAdministrationContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("park_name");
             entity.Property(e => e.ParkPercent).HasColumnName("park_percent");
+            entity.Property(e => e.ParkPhone)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('')")
+                .HasColumnName("park_phone");
             entity.Property(e => e.Penalties)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -601,6 +594,52 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasForeignKey(d => d.WithdrawMoneyId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_parks_withdraw_money_ways");
+        });
+
+        modelBuilder.Entity<ParksDriversConstraint>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_parks_drivers_constraints_ID");
+
+            entity.ToTable("parks_drivers_constraints");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.DriversConstraintId).HasColumnName("drivers_constraint_id");
+            entity.Property(e => e.ParkGuid)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .HasColumnName("park_guid");
+
+            entity.HasOne(d => d.DriversConstraint).WithMany(p => p.ParksDriversConstraints)
+                .HasForeignKey(d => d.DriversConstraintId)
+                .HasConstraintName("FK_parks_drivers_constrains_drivers_constraints");
+
+            entity.HasOne(d => d.Park).WithMany(p => p.ParksDriversConstraints)
+                .HasPrincipalKey(p => p.ParkGuid)
+                .HasForeignKey(d => d.ParkGuid)
+                .HasConstraintName("FK_parks_drivers_constraints_parks");
+        });
+
+        modelBuilder.Entity<ParksWorkCondition>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_parks_work_conditions_ID");
+
+            entity.ToTable("parks_work_conditions");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.ParkGuid)
+                .HasMaxLength(36)
+                .IsUnicode(false)
+                .HasColumnName("park_guid");
+            entity.Property(e => e.WorkConditionId).HasColumnName("work_condition_id");
+
+            entity.HasOne(d => d.Park).WithMany(p => p.ParksWorkConditions)
+                .HasPrincipalKey(p => p.ParkGuid)
+                .HasForeignKey(d => d.ParkGuid)
+                .HasConstraintName("FK_parks_work_conditions_parks");
+
+            entity.HasOne(d => d.WorkCondition).WithMany(p => p.ParksWorkConditions)
+                .HasForeignKey(d => d.WorkConditionId)
+                .HasConstraintName("FK_parks_work_conditions_work_conditions");
         });
 
         modelBuilder.Entity<ProductVersion>(entity =>
@@ -693,7 +732,7 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<RestrictedEntitiesWeb>(entity =>
         {
             entity.HasKey(e => e.EntityId)
-                .HasName("PK__restrict__2E73818A0C46DBD0")
+                .HasName("PK__restrict__2E73818AF8C2F491")
                 .IsClustered(false);
 
             entity.ToTable("restricted_entities_web");
@@ -718,7 +757,7 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<RightsWeb>(entity =>
         {
             entity.HasKey(e => e.Id)
-                .HasName("PK__rights_w__3214EC260CF32F38")
+                .HasName("PK__rights_w__3214EC262A258DE7")
                 .IsClustered(false);
 
             entity.ToTable("rights_web");
@@ -742,7 +781,7 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<RolesWeb>(entity =>
         {
             entity.HasKey(e => e.RoleId)
-                .HasName("PK__roles_we__5AC4D223CC85EC9A")
+                .HasName("PK__roles_we__5AC4D2238C9CF238")
                 .IsClustered(false);
 
             entity.ToTable("roles_web");
@@ -757,7 +796,7 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<RulesWeb>(entity =>
         {
             entity.HasKey(e => e.RuleId)
-                .HasName("PK__rules_we__E103520D7799F781")
+                .HasName("PK__rules_we__E103520DBC0613CC")
                 .IsClustered(false);
 
             entity.ToTable("rules_web");
@@ -816,52 +855,6 @@ public partial class TaxiAdministrationContext : DbContext
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(64)
                 .IsUnicode(false)
-                .HasDefaultValueSql("('system')")
-                .HasColumnName("updated_by");
-        });
-
-        modelBuilder.Entity<TaxiCompany>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("taxi_company");
-
-            entity.Property(e => e.Active)
-                .IsRequired()
-                .HasDefaultValueSql("((1))")
-                .HasColumnName("active");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(64)
-                .HasDefaultValueSql("('system')")
-                .HasColumnName("created_by");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
-            entity.Property(e => e.Ip4)
-                .HasDefaultValueSql("((2130706433))")
-                .HasColumnName("ip4");
-            entity.Property(e => e.TxAdress)
-                .HasMaxLength(512)
-                .HasDefaultValueSql("('')")
-                .HasColumnName("tx_adress");
-            entity.Property(e => e.TxDriver)
-                .HasMaxLength(512)
-                .HasDefaultValueSql("('')")
-                .HasColumnName("tx_driver");
-            entity.Property(e => e.TxName)
-                .HasMaxLength(128)
-                .HasDefaultValueSql("('')")
-                .HasColumnName("tx_name");
-            entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy)
-                .HasMaxLength(64)
                 .HasDefaultValueSql("('system')")
                 .HasColumnName("updated_by");
         });
@@ -927,10 +920,89 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("updated_by");
         });
 
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__users__3213E83F2E4084E0");
+
+            entity.ToTable("users");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Birthday)
+                .HasColumnType("date")
+                .HasColumnName("birthday");
+            entity.Property(e => e.ClientId)
+                .HasMaxLength(100)
+                .HasColumnName("client_id");
+            entity.Property(e => e.DefaultAvatarId)
+                .HasMaxLength(100)
+                .HasColumnName("default_avatar_id");
+            entity.Property(e => e.DefaultEmail)
+                .HasMaxLength(100)
+                .HasColumnName("default_email");
+            entity.Property(e => e.DefaultPhone)
+                .HasMaxLength(20)
+                .HasColumnName("default_phone");
+            entity.Property(e => e.DisplayName)
+                .HasMaxLength(100)
+                .HasColumnName("display_name");
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(100)
+                .HasColumnName("first_name");
+            entity.Property(e => e.IdYandex)
+                .HasMaxLength(20)
+                .HasColumnName("id_yandex");
+            entity.Property(e => e.IsAvatarEmpty)
+                .HasMaxLength(10)
+                .HasColumnName("is_avatar_empty");
+            entity.Property(e => e.LastName)
+                .HasMaxLength(100)
+                .HasColumnName("last_name");
+            entity.Property(e => e.Login)
+                .HasMaxLength(100)
+                .HasColumnName("login");
+            entity.Property(e => e.RealName)
+                .HasMaxLength(100)
+                .HasColumnName("real_name");
+            entity.Property(e => e.Sex)
+                .HasMaxLength(10)
+                .HasColumnName("sex");
+            entity.Property(e => e.DeviceId)
+                .HasMaxLength(100)
+                .HasColumnName("device_id");
+        });
+
+        modelBuilder.Entity<UserToken>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__user_tok__3213E83FC0631482");
+
+            entity.ToTable("user_tokens");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AccessToken)
+                .HasMaxLength(200)
+                .HasColumnName("access_token");
+            entity.Property(e => e.DateEdit)
+                .HasColumnType("datetime")
+                .HasColumnName("date_edit");
+            entity.Property(e => e.DeviceId)
+                .HasMaxLength(100)
+                .HasColumnName("device_id");
+            entity.Property(e => e.ExpiresIn).HasColumnName("expires_in");
+            entity.Property(e => e.RefreshToken)
+                .HasMaxLength(300)
+                .HasColumnName("refresh_token");
+            entity.Property(e => e.Scope)
+                .HasMaxLength(200)
+                .HasColumnName("scope");
+            entity.Property(e => e.TokenType)
+                .HasMaxLength(6)
+                .HasColumnName("token_type");
+        });
+
         modelBuilder.Entity<UsersErrorsLog>(entity =>
         {
             entity.HasKey(e => e.Id)
-                .HasName("PK__users_er__3214EC26FEB9CF3B")
+                .HasName("PK__users_er__3214EC260F3F8176")
                 .IsClustered(false);
 
             entity.ToTable("users_errors_log");
@@ -969,7 +1041,7 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<UsersLog>(entity =>
         {
             entity.HasKey(e => e.Id)
-                .HasName("PK__users_lo__3214EC26F882D782")
+                .HasName("PK__users_lo__3214EC2606E427AB")
                 .IsClustered(false);
 
             entity.ToTable("users_log");
@@ -1012,28 +1084,33 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<UsersParam>(entity =>
         {
             entity.HasKey(e => e.Id)
-                .HasName("PK__users_pa__3214EC262E24686B")
+                .HasName("PK__users_pa__3214EC264564F9FE")
                 .IsClustered(false);
 
             entity.ToTable("users_params");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Park)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("PARK");
             entity.Property(e => e.Phone)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("PHONE");
             entity.Property(e => e.RoleId).HasColumnName("ROLE_ID");
             entity.Property(e => e.UserId).HasColumnName("USER_ID");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UsersParams)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_users_params_roles");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UsersParams)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_users_params_users");
         });
 
         modelBuilder.Entity<UsersRolesListWeb>(entity =>
         {
             entity.HasKey(e => e.Id)
-                .HasName("PK__users_ro__3214EC267E4481E8")
+                .HasName("PK__users_ro__3214EC26ADFBF212")
                 .IsClustered(false);
 
             entity.ToTable("users_roles_list_web");
@@ -1041,6 +1118,15 @@ public partial class TaxiAdministrationContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.RoleId).HasColumnName("ROLE_ID");
             entity.Property(e => e.UserId).HasColumnName("USER_ID");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UsersRolesListWebs)
+                .HasForeignKey(d => d.RoleId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_users_roles_list_web_roles_web");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UsersRolesListWebs)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_users_roles_list_web_users");
         });
 
         modelBuilder.Entity<UsersWeb>(entity =>

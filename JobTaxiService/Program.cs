@@ -3,6 +3,9 @@ using JobTaxi.Entity;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddRazorPages();
+
+// Add services to the container.
 
 builder.Services.AddControllers();
 //Внедряем зависимость
@@ -15,5 +18,6 @@ var app = builder.Build();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapRazorPages();
 
 app.Run();

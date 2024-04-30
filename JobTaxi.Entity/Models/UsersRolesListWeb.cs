@@ -10,4 +10,8 @@ public partial class UsersRolesListWeb
     public int UserId { get; set; }
 
     public int RoleId { get; set; }
+
+    public virtual RolesWeb Role { get; set; } = null!;
+
+    public virtual UsersWeb User { get; set; } = null!;
 }

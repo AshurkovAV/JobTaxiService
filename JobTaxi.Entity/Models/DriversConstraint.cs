@@ -18,4 +18,6 @@ public partial class DriversConstraint
     public DateTime UpdatedAt { get; set; }
 
     public string UpdatedBy { get; set; } = null!;
+
+    public virtual ICollection<ParksDriversConstraint> ParksDriversConstraints { get; set; } = new List<ParksDriversConstraint>();
 }

@@ -13,5 +13,7 @@ public partial class UsersParam
 
     public string? Phone { get; set; }
 
-    public string? Park { get; set; }
+    public virtual RolesWeb Role { get; set; } = null!;
+
+    public virtual UsersWeb User { get; set; } = null!;
 }

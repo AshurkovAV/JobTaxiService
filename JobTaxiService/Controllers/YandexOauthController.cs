@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Mail;
-using System.Net;
+﻿using Azure.Core;
+using JobTaxi.Entity;
+using JobTaxi.Entity.Models;
 using JobTaxiService.Dto;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Microsoft.Extensions.Hosting;
-using System;
+using System.Net;
 using System.Net.Http.Headers;
 
 namespace JobTaxiService.Controllers
@@ -14,13 +13,21 @@ namespace JobTaxiService.Controllers
     [Route("[controller]")]
     public class YandexOauthController : ControllerBase
     {
-        
-        [Produces("application/json")]        
-        public async void Get(string code)
+        private readonly IJobRepository _jobRepository;
+        public YandexOauthController(IJobRepository jobRepository) {
+            _jobRepository = jobRepository;
+        }
+
+        [Produces("application/json")]
+        public async Task<IActionResult> Get(string code, string token)
         {
             Console.WriteLine("Запрос на авторизацию через яндеркс id");
             try
             {
+                if (token != "631DFC6B-5080-4E4B-BBDD-2E74DEFA8025") 
+                {
+                    return StatusCode(401);
+                }
                 var pathBase = "https://oauth.yandex.ru";
                 var client = new HttpClient();
                 Uri baseUri = new Uri(pathBase);
@@ -40,14 +47,134 @@ namespace JobTaxiService.Controllers
                 var response = await client.SendAsync(requestMessage);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
+
+                var tookeniser = JsonConvert.DeserializeObject<UserTokenJson>(responseBody);
+                var usertooken = _jobRepository.InsertUserToken(new UserToken
+                {
+                    AccessToken = tookeniser.access_token,
+                    ExpiresIn = tookeniser.expires_in,
+                    RefreshToken = tookeniser.refresh_token,
+                    Scope = tookeniser.scope,
+                    TokenType = tookeniser.token_type
+                });
+
                 Console.WriteLine(responseBody);
-                Redirect("https://таксиработааренда.рф/");              
-                
+                return new JsonResult(usertooken);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());                
-            }            
-        }       
+                Console.WriteLine(ex.ToString());
+                return StatusCode(502);
+            }
+            ////var ss = WebUtility.UrlEncode("таксиработааренда.рф");
+            ////var url = $"https://{ss}/";
+            //var url = "http://localhost:5226/Oauth";
+            //return Redirect(url);
+        }
+
+        [Produces("application/json")]
+        [Route("token/")]
+        public async Task<IActionResult> GetToken(string code, string cid, string deviceId)
+        {
+            Console.WriteLine("Запрос на авторизацию через яндеркс id");
+            try
+            {                
+                var pathBase = "https://oauth.yandex.ru";
+                var client = new HttpClient();
+                Uri baseUri = new Uri(pathBase);
+                client.BaseAddress = baseUri;
+
+                var values = new List<KeyValuePair<string, string>>();
+                values.Add(new KeyValuePair<string, string>("grant_type", "authorization_code"));
+                values.Add(new KeyValuePair<string, string>("code", $"{code}"));
+                var content = new FormUrlEncodedContent(values);
+
+                var base64EncodedAuthenticationString = "MzZkNTEzNDcyZDkyNGVhMjkwMTQwMWQ1MTk1OGJjNWM6N2RiYTRlMjVhN2IzNGEyMTk4MmVkZjc0NjZkMDFlZGI=";
+
+                var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/token");
+                requestMessage.Headers.Authorization = new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
+                requestMessage.Content = content;
+
+                var response = await client.SendAsync(requestMessage);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var tookeniser = JsonConvert.DeserializeObject<UserTokenJson>(responseBody);
+                var usertooken = _jobRepository.InsertUserToken(new UserToken
+                {
+                    AccessToken = tookeniser.access_token,
+                    ExpiresIn = tookeniser.expires_in,
+                    RefreshToken = tookeniser.refresh_token,
+                    Scope = tookeniser.scope,
+                    TokenType = tookeniser.token_type,
+                    DeviceId = deviceId,
+                    DateEdit = DateTime.Now
+                });
+
+                Console.WriteLine(responseBody);
+                return new JsonResult(usertooken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(502);
+            }           
+        }
+
+        [Produces("application/json")]
+        [Route("login/info")]
+        public async Task<IActionResult> GetLoginInfo(string code, string token, string deviceId)
+        {
+            Console.WriteLine("Обмен токена на данные о пользователе");
+            try
+            {
+                if (code != "631DFC6B-5080-4E4B-BBDD-2E74DEFA8025")
+                {
+                    return StatusCode(401);
+                }
+
+                var pathBase = "https://login.yandex.ru";
+                var client = new HttpClient();
+                Uri baseUri = new Uri(pathBase);
+                client.BaseAddress = baseUri;
+
+                var requestMessage = new HttpRequestMessage(HttpMethod.Get, "/info?format=json");
+                client.DefaultRequestHeaders.Add("Authorization", "OAuth " + token);
+                
+                
+                var response = await client.SendAsync(requestMessage);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                var user = JsonConvert.DeserializeObject<YandexProfil>(responseBody);
+                var usertooken = _jobRepository.InsertUser(
+                    new User
+                    {
+                        IdYandex = user.id,
+                        ClientId = user.client_id,
+                        Birthday = Convert.ToDateTime(user.birthday),
+                        DefaultEmail = user.default_email,
+                        DefaultAvatarId = user.default_avatar_id,
+                        DefaultPhone = user.default_phone.number,
+                        DisplayName = user.display_name,
+                        FirstName = user.first_name,
+                        LastName = user.last_name,
+                        Login = user.login,
+                        Sex = user.sex,
+                        RealName = user.real_name,
+                        IsAvatarEmpty = user.is_avatar_empty,
+                        DeviceId = deviceId
+
+                    });
+
+                Console.WriteLine(responseBody);
+                return new JsonResult(usertooken);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(502);
+            }
+        }
     }
 }

@@ -18,4 +18,6 @@ public partial class WorkCondition
     public DateTime UpdatedAt { get; set; }
 
     public string UpdatedBy { get; set; } = null!;
+
+    public virtual ICollection<ParksWorkCondition> ParksWorkConditions { get; set; } = new List<ParksWorkCondition>();
 }

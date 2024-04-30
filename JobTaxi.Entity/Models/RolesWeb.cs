@@ -13,5 +13,9 @@ public partial class RolesWeb
 
     public virtual ICollection<UsersErrorsLog> UsersErrorsLogs { get; set; } = new List<UsersErrorsLog>();
 
+    public virtual ICollection<UsersParam> UsersParams { get; set; } = new List<UsersParam>();
+
+    public virtual ICollection<UsersRolesListWeb> UsersRolesListWebs { get; set; } = new List<UsersRolesListWeb>();
+
     public virtual ICollection<UsersWeb> UsersWebs { get; set; } = new List<UsersWeb>();
 }

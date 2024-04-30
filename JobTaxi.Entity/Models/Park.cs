@@ -67,11 +67,19 @@ public partial class Park
 
     public int? CreatedUserId { get; set; }
 
+    public string ParkPhone { get; set; } = null!;
+
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
     public virtual UsersWeb? CreatedUser { get; set; }
 
     public virtual FirstDay FirstDay { get; set; } = null!;
+
+    public virtual ICollection<Offer> Offers { get; set; } = new List<Offer>();
+
+    public virtual ICollection<ParksDriversConstraint> ParksDriversConstraints { get; set; } = new List<ParksDriversConstraint>();
+
+    public virtual ICollection<ParksWorkCondition> ParksWorkConditions { get; set; } = new List<ParksWorkCondition>();
 
     public virtual WithdrayMoneyWay WithdrawMoneyNavigation { get; set; } = null!;
 }

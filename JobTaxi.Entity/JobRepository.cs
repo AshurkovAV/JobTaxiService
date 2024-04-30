@@ -1,6 +1,8 @@
 ﻿using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Transactions;
 
 namespace JobTaxi.Entity
 {
@@ -10,7 +12,7 @@ namespace JobTaxi.Entity
 
         public JobRepository(ILoggerFactory loggerFactory) 
         {
-            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "/logger.txt"));
             var logger = loggerFactory.CreateLogger("JobRepository");
             _logger = logger;
         }
@@ -69,7 +71,56 @@ namespace JobTaxi.Entity
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
                 var parks = db.CarsPictures.ToList();
-                result = parks;
+                var carspic = new List<CarsPicture>();
+                foreach (var p in parks) {
+                    carspic.Add(new CarsPicture
+                    { Id = p.Id,
+                    CarId = p.CarId
+                    
+                    });
+
+                }
+                result = carspic;
+            }
+            return result;
+        }
+
+
+        public UserToken InsertUserToken(UserToken user)
+        {
+            var result = new UserToken();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                db.UserTokens.Add(user);
+                db.Entry(user).State = EntityState.Added;
+                db.SaveChanges();
+                result = user;
+                int id = user.Id;                
+            }
+            return result;
+        }
+
+        public User InsertUser(User user) 
+        {
+            var result = new User();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                db.Users.Add(user);
+                db.Entry(user).State = EntityState.Added;
+                db.SaveChanges();
+                result = user;
+                int id = user.Id;
+            }
+            return result;
+        }
+
+        public User GetUser(string deviceId)
+        {
+            var result = new User();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var user = db.Users.FirstOrDefault(x=>x.DeviceId == deviceId);
+                result = user;                
             }
             return result;
         }
