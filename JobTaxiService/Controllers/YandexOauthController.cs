@@ -1,10 +1,9 @@
-﻿using Azure.Core;
-using JobTaxi.Entity;
+﻿using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using JobTaxiService.Dto;
+using JobTaxiService.Service;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Net;
 using System.Net.Http.Headers;
 
 namespace JobTaxiService.Controllers
@@ -14,8 +13,11 @@ namespace JobTaxiService.Controllers
     public class YandexOauthController : ControllerBase
     {
         private readonly IJobRepository _jobRepository;
-        public YandexOauthController(IJobRepository jobRepository) {
+        private readonly IDataService _dataService;
+        public YandexOauthController(IJobRepository jobRepository,
+            IDataService dataService) {
             _jobRepository = jobRepository;
+            _dataService = dataService;
         }
 
         [Produces("application/json")]
@@ -141,34 +143,15 @@ namespace JobTaxiService.Controllers
                 var requestMessage = new HttpRequestMessage(HttpMethod.Get, "/info?format=json");
                 client.DefaultRequestHeaders.Add("Authorization", "OAuth " + token);
                 
-                
                 var response = await client.SendAsync(requestMessage);
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
-
                 var user = JsonConvert.DeserializeObject<YandexProfil>(responseBody);
-                var usertooken = _jobRepository.InsertUser(
-                    new User
-                    {
-                        IdYandex = user.id,
-                        ClientId = user.client_id,
-                        Birthday = Convert.ToDateTime(user.birthday),
-                        DefaultEmail = user.default_email,
-                        DefaultAvatarId = user.default_avatar_id,
-                        DefaultPhone = user.default_phone.number,
-                        DisplayName = user.display_name,
-                        FirstName = user.first_name,
-                        LastName = user.last_name,
-                        Login = user.login,
-                        Sex = user.sex,
-                        RealName = user.real_name,
-                        IsAvatarEmpty = user.is_avatar_empty,
-                        DeviceId = deviceId
 
-                    });
+                var userResult = _dataService.CheckUser(user, deviceId);
 
                 Console.WriteLine(responseBody);
-                return new JsonResult(usertooken);
+                return new JsonResult(userResult);
             }
             catch (Exception ex)
             {

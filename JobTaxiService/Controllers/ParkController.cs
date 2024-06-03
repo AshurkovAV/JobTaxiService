@@ -2,6 +2,7 @@ using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
+using JobTaxi.Entity.Dto;
 
 namespace JobTaxiService.Controllers
 {
@@ -37,11 +38,54 @@ namespace JobTaxiService.Controllers
                 foreach (var car in cars) {
                     var carsPictures = _jobRepository.GetCarsPicture().Where(x => x.CarId == car.Id).ToList();
                     car.CarsPictures = carsPictures;
-                    _logger.LogInformation("GetCarsPicture");
+                    //_logger.LogInformation("GetCarsPicture");
                 }
             }
             result = (List<Park>)resultParks;
             return result;
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("truncated/")]
+        public async Task<IEnumerable<ParkTruncated>> GetTruncated(int rows, int page)
+        {
+            var result = new List<ParkTruncated>();
+            _logger.LogInformation("GetParksTruncated");
+            var resultParks = _jobRepository.GetParksTruncated(rows, page);
+            foreach (var park in resultParks)
+            {
+                var cars = _jobRepository.GetCar(park.Id).FirstOrDefault();
+                if(cars != null)
+                {
+                    park.CarAvatar = _jobRepository.GetCarsPicture()?.FirstOrDefault(x => x.CarId == cars.Id)?.Picture;
+                }               
+            }
+
+            result = (List<ParkTruncated>)resultParks;
+            return result;
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("id/")]
+        public async Task<List<int>> GetId()
+        {
+            var result = new List<int>();
+            _logger.LogInformation("GetIdParks");
+            var resultParks = _jobRepository.GetParksIdAll();                        
+            result = (List<int>)resultParks;
+            return result;
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("count/")]
+        public async Task<int> GetCount()
+        {
+            _logger.LogInformation("GetParkCount");
+            var resultParks = _jobRepository.GetParksCountAll();
+            return resultParks;
         }
     }
 }

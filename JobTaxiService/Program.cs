@@ -1,4 +1,5 @@
 using JobTaxi.Entity;
+using JobTaxiService.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 //Внедряем зависимость
 builder.Services.AddSingleton<IJobRepository, JobRepository>();
+builder.Services.AddSingleton<IDataService, DataService>();
 
 var app = builder.Build();
 

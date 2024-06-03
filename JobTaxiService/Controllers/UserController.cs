@@ -1,10 +1,6 @@
 ﻿using JobTaxi.Entity;
-using JobTaxi.Entity.Models;
-using JobTaxiService.Dto;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http.Headers;
+
 
 namespace JobTaxiService.Controllers
 {
@@ -19,7 +15,7 @@ namespace JobTaxiService.Controllers
 
         [Produces("application/json")]        
         [HttpPost]
-        public async Task<IActionResult> Get(string deviceId, string token)
+        public async Task<IActionResult> Get(string defaultPhone, string defaultEmail, string token)
         {
             Console.WriteLine("Добавление пользователя");
             try
@@ -28,7 +24,7 @@ namespace JobTaxiService.Controllers
                 {
                     return StatusCode(401);
                 }                
-                var user = _jobRepository.GetUser(deviceId);
+                var user = _jobRepository.GetUser(defaultPhone, defaultEmail);
                 return new JsonResult(user);
             }
             catch (Exception ex)

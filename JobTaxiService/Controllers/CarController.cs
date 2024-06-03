@@ -1,0 +1,43 @@
+using JobTaxi.Entity;
+using JobTaxi.Entity.Models;
+using Microsoft.AspNetCore.Mvc;
+using JobTaxi.Entity.Log;
+using JobTaxi.Entity.Dto;
+
+namespace JobTaxiService.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class CarController : ControllerBase
+    {
+        private readonly ILogger _logger;
+        private readonly IJobRepository _jobRepository;
+        public CarController(
+            ILoggerFactory loggerFactory,
+            IJobRepository jobRepository)
+        {            
+            _jobRepository = jobRepository;
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            var logger = loggerFactory.CreateLogger("JobRepository");
+            _logger = logger;
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        public async Task<IEnumerable<Car>> Get(int parkId)
+        {
+            var result = new List<Car>();
+            _logger.LogInformation("GetCar");
+            var resultCar = _jobRepository.GetCar(parkId);
+            
+            foreach (var car in resultCar)
+            {
+                var carsPictures = _jobRepository.GetCarsPicture().Where(x => x.CarId == car.Id).ToList();
+                car.CarsPictures = carsPictures;
+                result = (List<Car>)resultCar;
+                return result;
+            }
+            return result;
+        }        
+    }
+}
