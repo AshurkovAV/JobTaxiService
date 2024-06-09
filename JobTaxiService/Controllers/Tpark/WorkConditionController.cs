@@ -2,6 +2,7 @@ using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
+using JobTaxi.Entity.Dto;
 
 namespace JobTaxiService.Controllers.Tpark
 {
@@ -23,11 +24,11 @@ namespace JobTaxiService.Controllers.Tpark
 
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IEnumerable<ParksWorkCondition>> Get(string parkGuid)
+        public async Task<IEnumerable<WorkConditionTruncated>> Get(string parkGuid)
         {
-            var result = new List<ParksWorkCondition>();
+            var result = new List<WorkConditionTruncated>();
             _logger.LogInformation("GetParksWorkCondition");
-            var resultCar = _jobRepository.GetParksWorkCondition(parkGuid);
+            var resultCar = _jobRepository.GetParksWorkConditionTruncated(parkGuid);
             result = resultCar.ToList();
             return result;
         }

@@ -3,7 +3,7 @@
     public class ParkTruncated
     {
         public int Id { get; set; }
-
+        public string ParkGuid { get; set; }
         public string ParkName { get; set; } = null!;
         public string ParkAddress { get; set; } = null!; 
         public string? AddressLatitude { get; set; }

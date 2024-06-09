@@ -69,6 +69,7 @@ namespace JobTaxi.Entity
                         .Select(x => new ParkTruncated
                         {
                             Id = x.Id,
+                            ParkGuid = x.ParkGuid,
                             ParkName = x.ParkName,
                             ParkAddress = x.ParkAddress,
                             AddressLatitude = x.AddressLatitude,
@@ -148,23 +149,43 @@ namespace JobTaxi.Entity
             return result;
         }
 
-        public IEnumerable<ParksDriversConstraint> GetParksDriversConstraint(string parkGuid)
+        public IEnumerable<DriversConstraintTruncated> GetParksDriversConstraint(string parkGuid)
         {
-            var result = new List<ParksDriversConstraint>();
+            var result = new List<DriversConstraintTruncated>();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
-                var parks = db.ParksDriversConstraints.Where(x => x.ParkGuid == parkGuid).ToList();
+                var parks = db.ParksDriversConstraints
+                    .Where(x => x.ParkGuid == parkGuid)
+                    .Select(u=> new DriversConstraintTruncated
+                    {
+                        Id = u.Id,
+                        DriveName = (from drive in db.DriversConstraints
+                                     where drive.Id == u.DriversConstraintId
+                                     select drive.Name).FirstOrDefault() ?? string.Empty,
+
+                    })
+                    .ToList();
                 result = parks;
             }
             return result;
         }
 
-        public IEnumerable<ParksWorkCondition> GetParksWorkCondition(string parkGuid)
+        public IEnumerable<WorkConditionTruncated> GetParksWorkConditionTruncated(string parkGuid)
         {
-            var result = new List<ParksWorkCondition>();
+            var result = new List<WorkConditionTruncated>();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
-                var parks = db.ParksWorkConditions.Where(x => x.ParkGuid == parkGuid).ToList();
+                var parks = db.ParksWorkConditions
+                    .Where(x => x.ParkGuid == parkGuid)
+                    .Select(u => new WorkConditionTruncated
+                    {
+                        Id = u.Id,
+                        WorkName = (from drive in db.WorkConditions
+                                     where drive.Id == u.WorkConditionId
+                                     select drive.Name).FirstOrDefault() ?? string.Empty,
+
+                    })
+                    .ToList();
                 result = parks;
             }
             return result;

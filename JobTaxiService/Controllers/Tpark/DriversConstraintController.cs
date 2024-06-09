@@ -24,10 +24,10 @@ namespace JobTaxiService.Controllers.Tpark
 
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IEnumerable<ParksDriversConstraint>> Get(string parkGuid)
+        public async Task<IEnumerable<DriversConstraintTruncated>> Get(string parkGuid)
         {
-            var result = new List<ParksDriversConstraint>();
-            _logger.LogInformation("GetParksDriversConstraint");
+            var result = new List<DriversConstraintTruncated>();
+            _logger.LogInformation("GetDriversConstraintTruncated");
             var resultCar = _jobRepository.GetParksDriversConstraint(parkGuid);
             result = resultCar.ToList();
             return result;
