@@ -71,7 +71,30 @@ namespace JobTaxi.Entity
                             Id = x.Id,
                             ParkName = x.ParkName,
                             ParkAddress = x.ParkAddress,
+                            AddressLatitude = x.AddressLatitude,
+                            AddressLongitude = x.AddressLongitude,
                             ParkPhone = x.ParkPhone,
+                            ParkPercent = x.ParkPercent,
+                            SelfEmployed = x.SelfEmployed,
+                            SelfEmployedSum = x.SelfEmployedSum,
+                            WithdrawMoneyName = (from mon in db.WithdrayMoneyWays
+                                                 where mon.Id == x.WithdrawMoneyId
+                                                 select mon.Name).FirstOrDefault(),
+                            WithdrawMoney = x.WithdrawMoney,
+                            Penalties = x.Penalties,
+                            Deposit = x.Deposit,
+                            DepositRet = x.DepositRet,
+                            Waybills = x.Waybills,
+                            Inspection = x.Inspection,
+                            Insurance = x.Insurance,
+                            MinRentalPeriod = x.MinRentalPeriod,
+                            WorkRadius = x.WorkRadius,  
+                            rentalWriteOffTime = x.RentalWriteOffTime,
+                            GasThrowTaxometr = x.GasThrowTaxometr,
+                            FirstDayName = (from day in db.FirstDays
+                                            where day.Id == x.FirstDayId
+                                            select day.Name).FirstOrDefault(),
+                            Ransom = x.Ransom,
                             CreatedAt = x.CreatedAt,
                             CountCars = (from car in db.Cars
                                          where car.ParkId == x.Id 
@@ -125,6 +148,47 @@ namespace JobTaxi.Entity
             return result;
         }
 
+        public IEnumerable<ParksDriversConstraint> GetParksDriversConstraint(string parkGuid)
+        {
+            var result = new List<ParksDriversConstraint>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var parks = db.ParksDriversConstraints.Where(x => x.ParkGuid == parkGuid).ToList();
+                result = parks;
+            }
+            return result;
+        }
+
+        public IEnumerable<ParksWorkCondition> GetParksWorkCondition(string parkGuid)
+        {
+            var result = new List<ParksWorkCondition>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var parks = db.ParksWorkConditions.Where(x => x.ParkGuid == parkGuid).ToList();
+                result = parks;
+            }
+            return result;
+        }
+        public int GetCarsCountAll(int parkId)
+        {
+            int result = 0;
+            try
+            {
+                using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+                {
+                    var parks = db.Cars.Count(x=>x.ParkId == parkId 
+                    && x.Active == true
+                    && x.IsCarsGiven == false);
+                    result = parks;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Processing {0}", ex.Message);
+            }
+            return result;
+        }
+
         public IEnumerable<Car> GetCar()
         {
             var result = new List<Car>();
@@ -143,6 +207,23 @@ namespace JobTaxi.Entity
             {
                 var parks = db.Cars.Where(x=>x.ParkId == parkId).ToList();
                 result = parks;
+            }
+            return result;
+        }
+
+        public IEnumerable<Car> GetCar(int parkId, int rows, int page)
+        {
+            var result = new List<Car>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var cars = db.Cars.Where(x => x.ParkId == parkId
+                 && x.Active == true
+                && x.IsCarsGiven == false)
+                    .OrderBy(b => b.Id)
+                        .Skip((page - 1) * rows) //пропускает определенное количество элементов Страница
+                        .Take(rows) //извлекает определенное число элементов
+                        .ToList();
+                result = cars;
             }
             return result;
         }
@@ -194,6 +275,19 @@ namespace JobTaxi.Entity
                 db.SaveChanges();
                 result = user;
                 int id = user.Id;
+            }
+            return result;
+        }
+        public SelectPark InsertSelectPark(SelectPark selectPark) 
+        {
+            var result = new SelectPark();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                db.SelectParks.Add(selectPark);
+                db.Entry(selectPark).State = EntityState.Added;
+                db.SaveChanges();
+                result = selectPark;
+                int id = selectPark.Id;
             }
             return result;
         }

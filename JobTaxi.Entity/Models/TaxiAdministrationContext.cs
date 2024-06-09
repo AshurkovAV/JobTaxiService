@@ -59,6 +59,8 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<Schem> Schems { get; set; }
 
+    public virtual DbSet<SelectPark> SelectParks { get; set; }
+
     public virtual DbSet<Update> Updates { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -859,6 +861,41 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("updated_by");
         });
 
+        modelBuilder.Entity<SelectPark>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_select_parks_id");
+
+            entity.ToTable("select_parks");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Ip4)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValueSql("((2130706433))")
+                .HasColumnName("ip4");
+            entity.Property(e => e.ParkId).HasColumnName("park_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+        });
+
         modelBuilder.Entity<Update>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk__updates");
@@ -922,7 +959,7 @@ public partial class TaxiAdministrationContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__users__3213E83F2E4084E0");
+            entity.HasKey(e => e.Id).HasName("PK__users__3213E83FD8734900");
 
             entity.ToTable("users");
 
@@ -942,6 +979,9 @@ public partial class TaxiAdministrationContext : DbContext
             entity.Property(e => e.DefaultPhone)
                 .HasMaxLength(20)
                 .HasColumnName("default_phone");
+            entity.Property(e => e.DeviceId)
+                .HasMaxLength(100)
+                .HasColumnName("device_id");
             entity.Property(e => e.DisplayName)
                 .HasMaxLength(100)
                 .HasColumnName("display_name");
@@ -966,9 +1006,6 @@ public partial class TaxiAdministrationContext : DbContext
             entity.Property(e => e.Sex)
                 .HasMaxLength(10)
                 .HasColumnName("sex");
-            entity.Property(e => e.DeviceId)
-                .HasMaxLength(100)
-                .HasColumnName("device_id");
         });
 
         modelBuilder.Entity<UserToken>(entity =>

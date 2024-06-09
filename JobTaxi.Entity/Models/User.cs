@@ -32,5 +32,6 @@ public partial class User
     public string? IsAvatarEmpty { get; set; }
 
     public string? DefaultPhone { get; set; }
+
     public string? DeviceId { get; set; }
 }

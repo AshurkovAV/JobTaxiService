@@ -38,6 +38,35 @@ namespace JobTaxiService.Controllers
                 return result;
             }
             return result;
-        }        
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("nav")]
+        public async Task<IEnumerable<Car>> GetNav(int parkId, int rows, int page)
+        {
+            var result = new List<Car>();
+            _logger.LogInformation("GetCarNav");
+            var resultCar = _jobRepository.GetCar(parkId, rows, page);
+
+            foreach (var car in resultCar)
+            {
+                //var carsPictures = _jobRepository.GetCarsPicture().Where(x => x.CarId == car.Id).ToList();
+                //car.CarsPictures = carsPictures;
+                result = (List<Car>)resultCar;
+                return result;
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("count/")]
+        public async Task<int> GetCount(int parkId)
+        {
+            _logger.LogInformation("GetCarCount");
+            var resultCars = _jobRepository.GetCarsCountAll(parkId);
+            return resultCars;
+        }
     }
 }
