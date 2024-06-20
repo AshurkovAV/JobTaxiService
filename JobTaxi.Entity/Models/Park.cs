@@ -33,17 +33,17 @@ public partial class Park
 
     public string Deposit { get; set; } = null!;
 
-    public string DepositRet { get; set; } = null!;
+    public string? DepositRet { get; set; }
 
-    public string Waybills { get; set; } = null!;
+    public string? Waybills { get; set; }
 
-    public string Inspection { get; set; } = null!;
+    public string? Inspection { get; set; }
 
     public bool Insurance { get; set; }
 
     public string MinRentalPeriod { get; set; } = null!;
 
-    public string WorkRadius { get; set; } = null!;
+    public string? WorkRadius { get; set; }
 
     public string RentalWriteOffTime { get; set; } = null!;
 
@@ -69,11 +69,23 @@ public partial class Park
 
     public string ParkPhone { get; set; } = null!;
 
+    public int DepositRetId { get; set; }
+
+    public int WaybillsId { get; set; }
+
+    public int WorkRadiusId { get; set; }
+
+    public int InspectionId { get; set; }
+
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
     public virtual UsersWeb? CreatedUser { get; set; }
 
+    public virtual DepositRet DepositRetNavigation { get; set; } = null!;
+
     public virtual FirstDay FirstDay { get; set; } = null!;
+
+    public virtual Inspection InspectionNavigation { get; set; } = null!;
 
     public virtual ICollection<Offer> Offers { get; set; } = new List<Offer>();
 
@@ -81,5 +93,9 @@ public partial class Park
 
     public virtual ICollection<ParksWorkCondition> ParksWorkConditions { get; set; } = new List<ParksWorkCondition>();
 
+    public virtual Waybill WaybillsNavigation { get; set; } = null!;
+
     public virtual WithdrayMoneyWay WithdrawMoneyNavigation { get; set; } = null!;
+
+    public virtual WorkRadius WorkRadiusNavigation { get; set; } = null!;
 }

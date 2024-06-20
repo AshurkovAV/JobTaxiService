@@ -13,7 +13,7 @@ public partial class Driver
 
     public string? Ot { get; set; }
 
-    public DateTime Dr { get; set; }
+    public DateTime? Dr { get; set; }
 
     public string Phone { get; set; } = null!;
 

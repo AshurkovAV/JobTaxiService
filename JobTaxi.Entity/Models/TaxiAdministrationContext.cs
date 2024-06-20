@@ -23,6 +23,8 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<ControlsRestrictionType> ControlsRestrictionTypes { get; set; }
 
+    public virtual DbSet<DepositRet> DepositRets { get; set; }
+
     public virtual DbSet<Driver> Drivers { get; set; }
 
     public virtual DbSet<DriversConstraint> DriversConstraints { get; set; }
@@ -30,6 +32,8 @@ public partial class TaxiAdministrationContext : DbContext
     public virtual DbSet<FirstDay> FirstDays { get; set; }
 
     public virtual DbSet<FlagsValue> FlagsValues { get; set; }
+
+    public virtual DbSet<Inspection> Inspections { get; set; }
 
     public virtual DbSet<LoginFailedAttempt> LoginFailedAttempts { get; set; }
 
@@ -77,9 +81,13 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<UsersWeb> UsersWebs { get; set; }
 
+    public virtual DbSet<Waybill> Waybills { get; set; }
+
     public virtual DbSet<WithdrayMoneyWay> WithdrayMoneyWays { get; set; }
 
     public virtual DbSet<WorkCondition> WorkConditions { get; set; }
+
+    public virtual DbSet<WorkRadius> WorkRadii { get; set; }
 
     public virtual DbSet<WorkSalaryCondition> WorkSalaryConditions { get; set; }
 
@@ -238,6 +246,36 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("RESTRICTION_TITLE");
         });
 
+        modelBuilder.Entity<DepositRet>(entity =>
+        {
+            entity.ToTable("deposit_ret");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+        });
+
         modelBuilder.Entity<Driver>(entity =>
         {
             entity.ToTable("drivers");
@@ -358,6 +396,36 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasMaxLength(3)
                 .IsUnicode(false)
                 .HasColumnName("VAL");
+        });
+
+        modelBuilder.Entity<Inspection>(entity =>
+        {
+            entity.ToTable("inspection");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
         });
 
         modelBuilder.Entity<LoginFailedAttempt>(entity =>
@@ -511,12 +579,14 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("deposit_ret");
+            entity.Property(e => e.DepositRetId).HasColumnName("deposit_ret_id");
             entity.Property(e => e.FirstDayId).HasColumnName("first_day_id");
             entity.Property(e => e.GasThrowTaxometr).HasColumnName("gas_throw_taxometr");
             entity.Property(e => e.Inspection)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("inspection");
+            entity.Property(e => e.InspectionId).HasColumnName("inspection_id");
             entity.Property(e => e.Insurance).HasColumnName("insurance");
             entity.Property(e => e.Ip4)
                 .HasMaxLength(20)
@@ -572,12 +642,14 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("waybills");
+            entity.Property(e => e.WaybillsId).HasColumnName("waybills_id");
             entity.Property(e => e.WithdrawMoney).HasColumnName("withdraw_money");
             entity.Property(e => e.WithdrawMoneyId).HasColumnName("withdraw_money_id");
             entity.Property(e => e.WorkRadius)
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("work_radius");
+            entity.Property(e => e.WorkRadiusId).HasColumnName("work_radius_id");
             entity.Property(e => e.YandexTaxoparkId)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -587,15 +659,35 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasForeignKey(d => d.CreatedUserId)
                 .HasConstraintName("FK_parks_users_web");
 
+            entity.HasOne(d => d.DepositRetNavigation).WithMany(p => p.Parks)
+                .HasForeignKey(d => d.DepositRetId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_parks_deposit_ret");
+
             entity.HasOne(d => d.FirstDay).WithMany(p => p.Parks)
                 .HasForeignKey(d => d.FirstDayId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_parks_first_day");
 
+            entity.HasOne(d => d.InspectionNavigation).WithMany(p => p.Parks)
+                .HasForeignKey(d => d.InspectionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_parks_inspection");
+
+            entity.HasOne(d => d.WaybillsNavigation).WithMany(p => p.Parks)
+                .HasForeignKey(d => d.WaybillsId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_parks_waybills");
+
             entity.HasOne(d => d.WithdrawMoneyNavigation).WithMany(p => p.Parks)
                 .HasForeignKey(d => d.WithdrawMoneyId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_parks_withdraw_money_ways");
+
+            entity.HasOne(d => d.WorkRadiusNavigation).WithMany(p => p.Parks)
+                .HasForeignKey(d => d.WorkRadiusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_parks_work_radius");
         });
 
         modelBuilder.Entity<ParksDriversConstraint>(entity =>
@@ -691,7 +783,9 @@ public partial class TaxiAdministrationContext : DbContext
             entity.ToTable("registration_calls");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.Active)
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("active");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -868,7 +962,10 @@ public partial class TaxiAdministrationContext : DbContext
             entity.ToTable("select_parks");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.Active)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("active");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -1219,6 +1316,36 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasConstraintName("FK_users_web_ROLE_ID_VISIT");
         });
 
+        modelBuilder.Entity<Waybill>(entity =>
+        {
+            entity.ToTable("waybills");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+        });
+
         modelBuilder.Entity<WithdrayMoneyWay>(entity =>
         {
             entity.ToTable("withdray_money_ways");
@@ -1252,6 +1379,36 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<WorkCondition>(entity =>
         {
             entity.ToTable("work_conditions");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+        });
+
+        modelBuilder.Entity<WorkRadius>(entity =>
+        {
+            entity.ToTable("work_radius");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Active).HasColumnName("active");

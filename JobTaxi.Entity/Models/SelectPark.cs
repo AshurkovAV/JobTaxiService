@@ -11,7 +11,7 @@ public partial class SelectPark
 
     public int UserId { get; set; }
 
-    public bool Active { get; set; } = true;
+    public bool? Active { get; set; }
 
     public string Ip4 { get; set; } = null!;
 

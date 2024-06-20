@@ -1,4 +1,6 @@
-﻿namespace JobTaxi.Entity.Dto
+﻿using JobTaxi.Entity.Models;
+
+namespace JobTaxi.Entity.Dto
 {
     public class ParkTruncated
     {
@@ -26,7 +28,7 @@
         public bool GasThrowTaxometr { get; set; } //Заправка через таксометр * *
         public string? FirstDayName { get; set; }//Первый день *
         public bool Ransom { get; set; }//Выкуп
-        
+        public List<Car> Cars { get; set; }
 
 
         public DateTime CreatedAt { get; set; }
@@ -34,7 +36,9 @@
         public string ParkPhone { get; set; } = null!;
          public byte[] CarAvatar { get; set; }
         public int CountCars { get; set; }
+        public int CountDrive { get; set; }
+        public int CountWork { get; set; }
 
-        
+
     }
 }

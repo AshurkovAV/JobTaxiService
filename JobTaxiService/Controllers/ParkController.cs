@@ -53,18 +53,34 @@ namespace JobTaxiService.Controllers
             var result = new List<ParkTruncated>();
             _logger.LogInformation("GetParksTruncated");
             var resultParks = _jobRepository.GetParksTruncated(rows, page);
-            foreach (var park in resultParks)
-            {
-                var cars = _jobRepository.GetCar(park.Id).FirstOrDefault();
-                if(cars != null)
-                {
-                    park.CarAvatar = _jobRepository.GetCarsPicture()?.FirstOrDefault(x => x.CarId == cars.Id)?.Picture;
-                }               
-            }
+            //foreach (var park in resultParks)
+            //{
+            //    var cars = _jobRepository.GetCar(park.Id);
+            //    if(cars != null)
+            //    {
+            //        park.Cars = new List<Car>();
+            //        park.Cars.AddRange(cars);
+            //        //park.CarAvatar = _jobRepository.GetCarsPicture()?.FirstOrDefault(x => x.CarId == cars.Id)?.Picture;
+            //    }
+            //}
 
             result = (List<ParkTruncated>)resultParks;
             return result;
         }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("truncated/user")]
+        public async Task<IEnumerable<ParkTruncated>> GetTruncated(int rows, int page, int userId)
+        {
+            var result = new List<ParkTruncated>();
+            _logger.LogInformation("GetParksTruncated");
+            var resultParks = _jobRepository.GetParksTruncated(rows, page, userId);           
+
+            result = (List<ParkTruncated>)resultParks;
+            return result;
+        }
+
 
         [HttpGet]
         [Produces("application/json")]

@@ -3,6 +3,8 @@ using System.Net.Mail;
 using System.Net;
 using JobTaxiService.Dto;
 using Newtonsoft.Json;
+using JobTaxi.Entity.Log;
+using JobTaxi.Entity;
 
 namespace JobTaxiService.Controllers
 {
@@ -10,11 +12,22 @@ namespace JobTaxiService.Controllers
     [Route("[controller]")]
     public class SendMailController : ControllerBase
     {
+        private readonly ILogger _logger;
+        private readonly IJobRepository _jobRepository;
+        public SendMailController(
+            ILoggerFactory loggerFactory,
+            IJobRepository jobRepository)
+        {
+            _jobRepository = jobRepository;
+            loggerFactory.AddFile(Path.Combine(Directory.GetCurrentDirectory(), "logger.txt"));
+            var logger = loggerFactory.CreateLogger("JobRepository");
+            _logger = logger;
+        }
         [HttpPost]
         [Produces("application/json")]        
         public async Task<bool> Get()
         {
-            Console.WriteLine("Запрос на отправку данных по почте!");
+            _logger.LogInformation("Запрос на отправку данных по почте!");            
             try
             {
                 Mail? mail= new Mail();
@@ -45,12 +58,14 @@ namespace JobTaxiService.Controllers
                     smtp.Credentials = new NetworkCredential(from.Address, "kfoavuebmrejiwzr");
                     smtp.Send(m);
                     Console.WriteLine("Соообщение отправлено" + mail.EmailBody);
+                    _logger.LogInformation("Соообщение отправлено" + mail.EmailBody);
                     return true;                    
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                _logger.LogInformation(ex.ToString());
                 return false;
             }            
         }       
