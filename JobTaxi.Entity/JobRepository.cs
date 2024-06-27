@@ -85,12 +85,20 @@ namespace JobTaxi.Entity
                             WithdrawMoney = x.WithdrawMoney,
                             Penalties = x.Penalties,
                             Deposit = x.Deposit,
-                            DepositRet = x.DepositRet,
-                            Waybills = x.Waybills,
-                            Inspection = x.Inspection,
+                            DepositRet = (from mon in db.DepositRets
+                                          where mon.Id == x.DepositRetId
+                                          select mon.Name).FirstOrDefault(),
+                            Waybills = (from mon in db.Waybills
+                                        where mon.Id == x.WaybillsId
+                                        select mon.Name).FirstOrDefault(),
+                            Inspection = (from mon in db.Inspections
+                                          where mon.Id == x.InspectionId
+                                          select mon.Name).FirstOrDefault(),
                             Insurance = x.Insurance,
                             MinRentalPeriod = x.MinRentalPeriod,
-                            WorkRadius = x.WorkRadius,  
+                            WorkRadius = (from mon in db.WorkRadii
+                                          where mon.Id == x.WorkRadiusId
+                                          select mon.Name).FirstOrDefault(),  
                             rentalWriteOffTime = x.RentalWriteOffTime,
                             GasThrowTaxometr = x.GasThrowTaxometr,
                             FirstDayName = (from day in db.FirstDays
@@ -128,6 +136,11 @@ namespace JobTaxi.Entity
             {
                 using (TaxiAdministrationContext db = new TaxiAdministrationContext())
                 {
+                    var selectpark = db.SelectParks.Where(x => x.Active == true && x.UserId == userId)
+                        .OrderBy(x => x.Id)
+                        .Skip((page - 1) * rows) //пропускает определенное количество элементов Страница
+                        .Take(rows) //извлекает определенное число элементов
+                    ;
                     var parks = db.Parks.Where(x => x.Active == true)
                         .Select(x => new ParkTruncated
                         {
@@ -172,12 +185,9 @@ namespace JobTaxi.Entity
                                          where count.ParkGuid == x.ParkGuid
                                          select count).Count(),
 
-                        }).Join(db.SelectParks.Where(x => x.Active == true && x.UserId == userId),
-                        park => park.Id, selectpark => selectpark.ParkId, (park, selectpark) => park)
-                        .OrderBy(x => x.Id)
-                        .Skip(page) //пропускает определенное количество элементов Страница
-                        .Take(rows); //извлекает определенное число элементов;
-                
+                        }).Join(selectpark,
+                        park => park.Id, selectpark => selectpark.ParkId, (park, selectpark) => park);
+                        
 
                     result = parks.ToList();
                 }
@@ -393,6 +403,28 @@ namespace JobTaxi.Entity
             return result;
         }
 
+        public IEnumerable<DriversConstraint> GetDriversConstraint()
+        {
+            var result = new List<DriversConstraint>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.DriversConstraints.Where(x=> x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<WorkCondition> GetWorkCondition()
+        {
+            var result = new List<WorkCondition>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.WorkConditions.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
         public bool DeleteSelectPark(int selectParkId, int userId)
         {
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
@@ -467,6 +499,14 @@ namespace JobTaxi.Entity
             var result = new SelectPark();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
+                var sp = db.SelectParks.FirstOrDefault(x=>
+                x.ParkId == selectPark.ParkId 
+                && x.UserId == selectPark.UserId
+                && x.Active == true);
+                if (sp != null)
+                {
+                    return sp;
+                }
                 db.SelectParks.Add(selectPark);
                 db.Entry(selectPark).State = EntityState.Added;
                 db.SaveChanges();

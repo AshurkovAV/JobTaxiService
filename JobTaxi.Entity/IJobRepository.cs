@@ -32,5 +32,8 @@ namespace JobTaxi.Entity
         public Offer GetOffer(int id);
         
         public Offer CreateUpdateOffer(Offer offer);
+
+        public IEnumerable<DriversConstraint> GetDriversConstraint();
+        public IEnumerable<WorkCondition> GetWorkCondition();
     }
 }
