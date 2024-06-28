@@ -425,6 +425,60 @@ namespace JobTaxi.Entity
             return result;
         }
 
+        public IEnumerable<DepositRet> GetDepositRet()
+        {
+            var result = new List<DepositRet>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.DepositRets.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+        public IEnumerable<Inspection> GetInspection()
+        {
+            var result = new List<Inspection>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.Inspections.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<Waybill> GetWaybill()
+        {
+            var result = new List<Waybill>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.Waybills.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<WorkRadius> GetWorkRadius()
+        {
+            var result = new List<WorkRadius>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.WorkRadii.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<FirstDay> GetFirstDay()
+        {
+            var result = new List<FirstDay>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.FirstDays.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
         public bool DeleteSelectPark(int selectParkId, int userId)
         {
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())

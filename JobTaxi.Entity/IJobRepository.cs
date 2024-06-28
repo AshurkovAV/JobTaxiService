@@ -35,5 +35,10 @@ namespace JobTaxi.Entity
 
         public IEnumerable<DriversConstraint> GetDriversConstraint();
         public IEnumerable<WorkCondition> GetWorkCondition();
+        public IEnumerable<DepositRet> GetDepositRet();
+        public IEnumerable<Inspection> GetInspection();
+        public IEnumerable<Waybill> GetWaybill();
+        public IEnumerable<WorkRadius> GetWorkRadius();
+        public IEnumerable<FirstDay> GetFirstDay();
     }
 }
