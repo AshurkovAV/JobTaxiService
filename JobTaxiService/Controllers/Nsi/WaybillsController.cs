@@ -2,6 +2,7 @@ using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
+using JobTaxi.Entity.Dto.Nsi;
 
 namespace JobTaxiService.Controllers.Nsi
 {
@@ -23,12 +24,19 @@ namespace JobTaxiService.Controllers.Nsi
 
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IEnumerable<Waybill>> Get()
+        public async Task<IEnumerable<WaybillsDto>> Get()
         {
-            var result = new List<Waybill>();
+            var result = new List<WaybillsDto>();
             _logger.LogInformation("GetWaybill");
             var resultData = _jobRepository.GetWaybill();
-            result = resultData.ToList();
+            foreach (var item in resultData)
+            {
+                result.Add(new WaybillsDto
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                });
+            }            
             return result;
         }
     }

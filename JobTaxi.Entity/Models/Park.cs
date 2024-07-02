@@ -41,7 +41,7 @@ public partial class Park
 
     public bool Insurance { get; set; }
 
-    public string MinRentalPeriod { get; set; } = null!;
+    public string? MinRentalPeriod { get; set; }
 
     public string? WorkRadius { get; set; }
 
@@ -77,6 +77,8 @@ public partial class Park
 
     public int InspectionId { get; set; }
 
+    public int MinRentalPeriodId { get; set; }
+
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
     public virtual UsersWeb? CreatedUser { get; set; }
@@ -86,6 +88,8 @@ public partial class Park
     public virtual FirstDay FirstDay { get; set; } = null!;
 
     public virtual Inspection InspectionNavigation { get; set; } = null!;
+
+    public virtual MinRentalPeriod MinRentalPeriodNavigation { get; set; } = null!;
 
     public virtual ICollection<Offer> Offers { get; set; } = new List<Offer>();
 

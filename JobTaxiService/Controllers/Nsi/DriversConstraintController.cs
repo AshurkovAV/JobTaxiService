@@ -2,6 +2,7 @@ using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
+using JobTaxi.Entity.Dto.Nsi;
 
 namespace JobTaxiService.Controllers.Nsi
 {
@@ -23,12 +24,19 @@ namespace JobTaxiService.Controllers.Nsi
 
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IEnumerable<DriversConstraint>> Get()
+        public async Task<IEnumerable<DriversConstraintDto>> Get()
         {
-            var result = new List<DriversConstraint>();
+            var result = new List<DriversConstraintDto>();
             _logger.LogInformation("GetDriversConstraint");
             var resultData = _jobRepository.GetDriversConstraint();
-            result = resultData.ToList();
+            foreach (var item in resultData)
+            {
+                result.Add(new DriversConstraintDto
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                });
+            }            
             return result;
         }
     }

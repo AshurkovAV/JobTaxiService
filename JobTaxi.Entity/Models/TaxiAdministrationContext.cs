@@ -39,6 +39,8 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<MenuWeb> MenuWebs { get; set; }
 
+    public virtual DbSet<MinRentalPeriod> MinRentalPeriods { get; set; }
+
     public virtual DbSet<ModulesWeb> ModulesWebs { get; set; }
 
     public virtual DbSet<Offer> Offers { get; set; }
@@ -487,6 +489,38 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasConstraintName("FK_menu_web_MODULE_ID");
         });
 
+        modelBuilder.Entity<MinRentalPeriod>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_min_rental_period_ID");
+
+            entity.ToTable("min_rental_period");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("NAME");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+        });
+
         modelBuilder.Entity<ModulesWeb>(entity =>
         {
             entity.HasKey(e => e.ModuleId)
@@ -597,6 +631,7 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("min_rental_period");
+            entity.Property(e => e.MinRentalPeriodId).HasColumnName("min_rental_period_id");
             entity.Property(e => e.ParkAddress)
                 .HasMaxLength(200)
                 .IsUnicode(false)
@@ -673,6 +708,11 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasForeignKey(d => d.InspectionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_parks_inspection");
+
+            entity.HasOne(d => d.MinRentalPeriodNavigation).WithMany(p => p.Parks)
+                .HasForeignKey(d => d.MinRentalPeriodId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_parks_min_rental_period");
 
             entity.HasOne(d => d.WaybillsNavigation).WithMany(p => p.Parks)
                 .HasForeignKey(d => d.WaybillsId)

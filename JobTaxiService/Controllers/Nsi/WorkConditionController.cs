@@ -3,6 +3,7 @@ using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Dto;
+using JobTaxi.Entity.Dto.Nsi;
 
 namespace JobTaxiService.Controllers.Nsi
 {
@@ -24,12 +25,19 @@ namespace JobTaxiService.Controllers.Nsi
 
         [HttpGet]
         [Produces("application/json")]
-        public async Task<IEnumerable<WorkCondition>> Get()
+        public async Task<IEnumerable<WorkConditionDto>> Get()
         {
-            var result = new List<WorkCondition>();
+            var result = new List<WorkConditionDto>();
             _logger.LogInformation("GetWorkCondition");
             var resultData = _jobRepository.GetWorkCondition();
-            result = resultData.ToList();
+            foreach (var item in resultData)
+            {
+                result.Add(new WorkConditionDto
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                });
+            }            
             return result;
         }
     }
