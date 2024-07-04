@@ -1,4 +1,5 @@
 ﻿using JobTaxi.Entity.Dto;
+using JobTaxi.Entity.Dto.Nsi;
 using JobTaxi.Entity.Models;
 
 namespace JobTaxi.Entity
@@ -30,8 +31,10 @@ namespace JobTaxi.Entity
         public Driver CreateUpdateDriver(Driver driver);
 
         public Offer GetOffer(int id);
-        
+        public UsersFilter GetUsersFilter(int id);
+
         public Offer CreateUpdateOffer(Offer offer);
+        public UsersFilter CreateUpdateUsersFilter(UsersFilter usersFilter);
 
         public IEnumerable<DriversConstraint> GetDriversConstraint();
         public IEnumerable<WorkCondition> GetWorkCondition();
@@ -39,6 +42,7 @@ namespace JobTaxi.Entity
         public IEnumerable<Inspection> GetInspection();
         public IEnumerable<Waybill> GetWaybill();
         public IEnumerable<WorkRadius> GetWorkRadius();
+        public IEnumerable<MinRentalPeriod> GetMinRentalPeriod();        
         public IEnumerable<FirstDay> GetFirstDay();
     }
 }

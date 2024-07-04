@@ -358,6 +358,18 @@ namespace JobTaxi.Entity
             }
             return result;
         }
+
+        public UsersFilter GetUsersFilter(int id)
+        {
+            var result = new UsersFilter();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.UsersFilters.FirstOrDefault(x => x.Id == id
+                 && x.Active == true);
+                result = data;
+            }
+            return result;
+        }
         public int GetSelectParkCount(int userId)
         {
             int result = 0;
@@ -463,6 +475,17 @@ namespace JobTaxi.Entity
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
                 var data = db.WorkRadii.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<MinRentalPeriod> GetMinRentalPeriod()
+        {
+            var result = new List<MinRentalPeriod>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.MinRentalPeriods.Where(x => x.Active == true).ToList();
                 result = data;
             }
             return result;
@@ -615,6 +638,20 @@ namespace JobTaxi.Entity
 
                 db.SaveChanges();
                 result = offer;               
+            }
+            return result;
+        }
+
+        public UsersFilter CreateUpdateUsersFilter(UsersFilter usersFilter)
+        {
+            var result = new UsersFilter();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                db.UsersFilters.Add(usersFilter);
+                db.Entry(usersFilter).State = EntityState.Added;
+
+                db.SaveChanges();
+                result = usersFilter;
             }
             return result;
         }

@@ -2,6 +2,7 @@ using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
+using JobTaxi.Entity.Dto.Nsi;
 
 namespace JobTaxiService.Controllers.Nsi
 {
@@ -21,15 +22,22 @@ namespace JobTaxiService.Controllers.Nsi
             _logger = logger;
         }
 
-        //[HttpGet]
-        //[Produces("application/json")]
-        //public async Task<IEnumerable<MinRe>> Get()
-        //{
-        //    var result = new List<WorkRadius>();
-        //    _logger.LogInformation("GetWorkRadius");
-        //    var resultData = _jobRepository.GetWorkRadius();
-        //    result = resultData.ToList();
-        //    return result;
-        //}
+        [HttpGet]
+        [Produces("application/json")]
+        public async Task<IEnumerable<MinRentalPeriodDto>> Get()
+        {
+            var result = new List<MinRentalPeriodDto>();
+            _logger.LogInformation("GetMinRentalPeriodDto");
+            var resultData = _jobRepository.GetMinRentalPeriod();
+            foreach (var item in resultData)
+            {
+                result.Add(new MinRentalPeriodDto
+                {
+                    Id = item.Id,
+                    Name = item.Name
+                });
+            }            
+            return result;
+        }
     }
 }

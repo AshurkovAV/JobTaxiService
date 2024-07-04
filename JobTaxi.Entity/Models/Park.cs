@@ -79,6 +79,10 @@ public partial class Park
 
     public int MinRentalPeriodId { get; set; }
 
+    public bool IsAdminTrusted { get; set; }
+
+    public bool? IsAdminActive { get; set; }
+
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
     public virtual UsersWeb? CreatedUser { get; set; }
