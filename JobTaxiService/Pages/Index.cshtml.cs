@@ -17,7 +17,7 @@ namespace JobTaxiService.Pages
         {
             var iPAddress = HttpContext.Connection.RemoteIpAddress;
             
-            Console.WriteLine($"Пришли на страницу landinga {iPAddress}");
+            Console.WriteLine($"Пришли на страницу landinga {iPAddress} {DateTime.Now}");
             try
             {
                              
