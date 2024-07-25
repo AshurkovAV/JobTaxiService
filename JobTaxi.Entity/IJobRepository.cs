@@ -14,7 +14,7 @@ namespace JobTaxi.Entity
         public IEnumerable<CatalogAutoClass> GetCatalogAutoClasses();
         public IEnumerable<Car> GetCar();
         public IEnumerable<Car> GetCar(int parkId);
-        public IEnumerable<Car> GetCar(int parkId, int rows, int page);
+        public IEnumerable<CarDto> GetCar(int parkId, int rows, int page);
         public int GetCarsCountAll(int parkId);
         public IEnumerable<DriversConstraintTruncated> GetParksDriversConstraint(string parkGuid);
         public IEnumerable<WorkConditionTruncated> GetParksWorkConditionTruncated(string parkGuid);
@@ -39,6 +39,8 @@ namespace JobTaxi.Entity
         public IEnumerable<DriversConstraint> GetDriversConstraint();
         public IEnumerable<WorkCondition> GetWorkCondition();
         public IEnumerable<DepositRet> GetDepositRet();
+        public IEnumerable<Location5> GetLocation();
+        public IEnumerable<Locatioin1> GetLocation1();
         public IEnumerable<Inspection> GetInspection();
         public IEnumerable<Waybill> GetWaybill();
         public IEnumerable<WorkRadius> GetWorkRadius();

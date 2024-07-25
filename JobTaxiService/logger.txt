@@ -62,3 +62,9 @@ DownloadFileController   C:\Users\ashur\source\repos\JobTaxiService\JobTaxiServi
 DownloadFileController   C:\Users\ashur\source\repos\JobTaxiService\JobTaxiService
 DownloadFileController   C:\Users\ashur\source\repos\JobTaxiService\JobTaxiService
 DownloadFileController   C:\Users\ashur\source\repos\JobTaxiService\JobTaxiService
+GetLocationDto
+GetLocationDto
+GetLocationDto
+GetLocationDto
+GetLocationDto
+GetLocationDto

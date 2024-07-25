@@ -83,6 +83,8 @@ public partial class Park
 
     public bool? IsAdminActive { get; set; }
 
+    public string? YandexApiKey { get; set; }
+
     public virtual ICollection<Car> Cars { get; set; } = new List<Car>();
 
     public virtual UsersWeb? CreatedUser { get; set; }

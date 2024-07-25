@@ -35,6 +35,12 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<Inspection> Inspections { get; set; }
 
+    public virtual DbSet<Locatioin1> Locatioin1s { get; set; }
+
+    public virtual DbSet<Location> Locations { get; set; }
+
+    public virtual DbSet<Location5> Location5s { get; set; }
+
     public virtual DbSet<LoginFailedAttempt> LoginFailedAttempts { get; set; }
 
     public virtual DbSet<MenuWeb> MenuWebs { get; set; }
@@ -432,6 +438,41 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("updated_by");
         });
 
+        modelBuilder.Entity<Locatioin1>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("locatioin1");
+
+            entity.Property(e => e.CatName)
+                .HasMaxLength(60)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Location>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("location");
+
+            entity.Property(e => e.AreaTree).HasColumnName("areaTree");
+        });
+
+        modelBuilder.Entity<Location5>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("location5");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id");
+            entity.Property(e => e.Obl).HasColumnName("obl");
+            entity.Property(e => e.OblId).HasColumnName("obl_id");
+            entity.Property(e => e.OblName).HasColumnName("obl_name");
+            entity.Property(e => e.Obls).HasColumnName("obls");
+        });
+
         modelBuilder.Entity<LoginFailedAttempt>(entity =>
         {
             entity.HasKey(e => e.Id)
@@ -692,6 +733,10 @@ public partial class TaxiAdministrationContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("work_radius");
             entity.Property(e => e.WorkRadiusId).HasColumnName("work_radius_id");
+            entity.Property(e => e.YandexApiKey)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("yandex_api_key");
             entity.Property(e => e.YandexTaxoparkId)
                 .HasMaxLength(50)
                 .IsUnicode(false)

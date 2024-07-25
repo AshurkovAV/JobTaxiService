@@ -43,17 +43,18 @@ namespace JobTaxiService.Controllers
         [HttpGet]
         [Produces("application/json")]
         [Route("nav")]
-        public async Task<IEnumerable<Car>> GetNav(int parkId, int rows, int page)
+        public async Task<IEnumerable<CarDto>> GetNav(int parkId, int rows, int page)
         {
-            var result = new List<Car>();
+            var result = new List<CarDto>();
             _logger.LogInformation("GetCarNav");
             var resultCar = _jobRepository.GetCar(parkId, rows, page);
 
             foreach (var car in resultCar)
             {
+
                 //var carsPictures = _jobRepository.GetCarsPicture().Where(x => x.CarId == car.Id).ToList();
                 //car.CarsPictures = carsPictures;
-                result = (List<Car>)resultCar;
+                result = (List<CarDto>)resultCar;
                 return result;
             }
             return result;

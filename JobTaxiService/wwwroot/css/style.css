@@ -21,10 +21,10 @@
 *****************************************/
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap");
 body {
-  font-family: "Raleway", sans-serif;
-  letter-spacing: 1px;
-  color: #323232;
-  font-size: 14px;
+    font-family: 'Gilroy',Arial,sans-serif;
+    letter-spacing: 1px;
+    color: #323232;
+    font-size: 14px;
 }
 
 h1,
@@ -33,8 +33,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Raleway", sans-serif;
-  font-weight: 600;
+    font-family: 'Gilroy',Arial,sans-serif;
+    font-weight: 990;
 }
 
 
@@ -262,7 +262,7 @@ button:focus {
 
 .heading-title-title {
   font-size: 21px;
-  font-weight: 600;
+  font-weight: 990;
 }
 
 .heading-title-desc {
@@ -1250,9 +1250,9 @@ button:focus {
 .cta .counter-count {
   font-size: 44px;
 }
-.cta .counter-count .counter_value {
-  font-family: "Raleway", sans-serif;
-}
+    .cta .counter-count .counter_value {
+        font-family: 'Gilroy',Arial,sans-serif;
+    }
 
 .cta-2 {
   background: url(../images/background/bg-2.jpg);

@@ -1,5 +1,6 @@
 ﻿using Azure;
 using JobTaxi.Entity.Dto;
+using JobTaxi.Entity.Dto.Nsi;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Models;
 using Microsoft.EntityFrameworkCore;
@@ -318,14 +319,31 @@ namespace JobTaxi.Entity
             return result;
         }
 
-        public IEnumerable<Car> GetCar(int parkId, int rows, int page)
+        public IEnumerable<CarDto> GetCar(int parkId, int rows, int page)
         {
-            var result = new List<Car>();
+            var result = new List<CarDto>();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
                 var cars = db.Cars.Where(x => x.ParkId == parkId
                  && x.Active == true
                 && x.IsCarsGiven == false)
+                    .Select(x=> new CarDto
+                    {
+                        Id = x.Id,
+                        CarName = x.CarName,
+                        ClassName = (from data in db.CatalogAutoClasses
+                                       where data.Id == x.CatalogAutoClassId
+                                       select data.RName).FirstOrDefault(),
+                        Color = x.Color,
+                        Model = x.Model,
+                        Number = x.Number,
+                        PriceForDay = x.PriceForDay,
+                        ShemaName = (from data in db.Schems
+                                     where data.Id == x.SchemId
+                                     select data.Name).FirstOrDefault(),
+                        Year = x.Year
+
+                    })
                     .OrderBy(b => b.Id)
                         .Skip((page - 1) * rows) //пропускает определенное количество элементов Страница
                         .Take(rows) //извлекает определенное число элементов
@@ -443,6 +461,28 @@ namespace JobTaxi.Entity
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
                 var data = db.DepositRets.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<Location5> GetLocation()
+        {
+            var result = new List<Location5>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.Location5s.ToList();
+                result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<Locatioin1> GetLocation1()
+        {
+            var result = new List<Locatioin1>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.Locatioin1s.ToList();
                 result = data;
             }
             return result;
