@@ -44,12 +44,14 @@ namespace JobTaxiService.Controllers
             var result = new SelectParkDto();
             _logger.LogInformation("GetSelectPark");
             var resultData = _jobRepository.GetSelectPark(selectParkId, userId);
-
-            result = new SelectParkDto
+            if (resultData?.Id != null)
             {
-                ParkId = resultData.ParkId,
-                UserId = resultData.UserId,
-            };
+                result = new SelectParkDto
+                {
+                    ParkId = resultData.ParkId,
+                    UserId = resultData.UserId,
+                };
+            }
            
             return result;
         }

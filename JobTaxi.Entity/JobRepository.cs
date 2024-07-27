@@ -130,6 +130,84 @@ namespace JobTaxi.Entity
             return result;
         }
 
+        public IEnumerable<ParkTruncated> GetParksTruncatedToUserId(int rows, int page, int userId)
+        {
+            var result = new List<ParkTruncated>();
+            try
+            {
+                using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+                {
+                    var parks = db.Parks
+                        .OrderBy(b => b.Id)
+                        .Skip((page - 1) * rows) //пропускает определенное количество элементов Страница
+                        .Take(rows) //извлекает определенное число элементов
+                        .Select(x => new ParkTruncated
+                        {
+                            Id = x.Id,
+                            ParkGuid = x.ParkGuid,
+                            ParkName = x.ParkName,
+                            ParkAddress = x.ParkAddress,
+                            AddressLatitude = x.AddressLatitude,
+                            AddressLongitude = x.AddressLongitude,
+                            ParkPhone = x.ParkPhone,
+                            ParkPercent = x.ParkPercent,
+                            SelfEmployed = x.SelfEmployed,
+                            SelfEmployedSum = x.SelfEmployedSum,
+                            WithdrawMoneyName = (from mon in db.WithdrayMoneyWays
+                                                 where mon.Id == x.WithdrawMoneyId
+                                                 select mon.Name).FirstOrDefault(),
+                            WithdrawMoney = x.WithdrawMoney,
+                            Penalties = x.Penalties,
+                            Deposit = x.Deposit,
+                            DepositRet = (from mon in db.DepositRets
+                                          where mon.Id == x.DepositRetId
+                                          select mon.Name).FirstOrDefault(),
+                            Waybills = (from mon in db.Waybills
+                                        where mon.Id == x.WaybillsId
+                                        select mon.Name).FirstOrDefault(),
+                            Inspection = (from mon in db.Inspections
+                                          where mon.Id == x.InspectionId
+                                          select mon.Name).FirstOrDefault(),
+                            Insurance = x.Insurance,
+                            MinRentalPeriod = x.MinRentalPeriod,
+                            WorkRadius = (from mon in db.WorkRadii
+                                          where mon.Id == x.WorkRadiusId
+                                          select mon.Name).FirstOrDefault(),
+                            rentalWriteOffTime = x.RentalWriteOffTime,
+                            GasThrowTaxometr = x.GasThrowTaxometr,
+                            FirstDayName = (from day in db.FirstDays
+                                            where day.Id == x.FirstDayId
+                                            select day.Name).FirstOrDefault(),
+                            Ransom = x.Ransom,
+                            CreatedAt = x.CreatedAt,
+                            CountCars = (from car in db.Cars
+                                         where car.ParkId == x.Id
+                                         && car.Active == true
+                                         && car.IsCarsGiven == false
+                                         select car).Count(),
+                            CountDrive = (from count in db.ParksDriversConstraints
+                                          where count.ParkGuid == x.ParkGuid
+                                          select count).Count(),
+                            CountWork = (from count in db.ParksWorkConditions
+                                         where count.ParkGuid == x.ParkGuid
+                                         select count).Count(),
+                            SelectPark = (from count in db.SelectParks
+                                          where count.ParkId == x.Id 
+                                          && count.Active == true
+                                          && count.UserId == userId
+                                          select count).Count()
+
+                        }).ToList();
+                    result = parks;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Processing {0}", ex.Message);
+            }
+            return result;
+        }
+
         public IEnumerable<ParkTruncated> GetParksTruncated(int rows, int page, int userId)
         {
             var result = new List<ParkTruncated>();

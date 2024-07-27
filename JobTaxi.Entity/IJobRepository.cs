@@ -9,6 +9,7 @@ namespace JobTaxi.Entity
         public IEnumerable<Park> GetParks();
         public IEnumerable<ParkTruncated> GetParksTruncated(int rows, int page);
         public IEnumerable<ParkTruncated> GetParksTruncated(int rows, int page, int userId);
+        public IEnumerable<ParkTruncated> GetParksTruncatedToUserId(int rows, int page, int userId);
         public int GetParksCountAll();
         public IEnumerable<int> GetParksIdAll();
         public IEnumerable<CatalogAutoClass> GetCatalogAutoClasses();

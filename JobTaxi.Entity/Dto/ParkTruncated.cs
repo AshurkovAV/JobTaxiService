@@ -16,7 +16,7 @@ namespace JobTaxi.Entity.Dto
         public string? WithdrawMoneyName { get; set; }//Расчет суммы за вывод денег *
         public double WithdrawMoney { get; set; }//Вывод денег: значение *
         public string? Penalties { get; set; } //Штрафы
-
+        public int? SelectPark { get; set; }
         public string Deposit { get; set; } //Депозит *
         public string DepositRet { get; set; } //Возврат депозита *
         public string Waybills { get; set; } //Путевые *

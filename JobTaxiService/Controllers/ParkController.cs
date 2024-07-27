@@ -70,6 +70,18 @@ namespace JobTaxiService.Controllers
 
         [HttpGet]
         [Produces("application/json")]
+        [Route("truncated/touser")]
+        public async Task<IEnumerable<ParkTruncated>> GetTruncatedToUserId(int rows, int page, int userId)
+        {
+            var result = new List<ParkTruncated>();
+            _logger.LogInformation("GetParksTruncated");
+            var resultParks = _jobRepository.GetParksTruncatedToUserId(rows, page, userId);
+            result = (List<ParkTruncated>)resultParks;
+            return result;
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
         [Route("truncated/user")]
         public async Task<IEnumerable<ParkTruncated>> GetTruncated(int rows, int page, int userId)
         {
