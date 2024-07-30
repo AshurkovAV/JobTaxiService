@@ -32,9 +32,8 @@ namespace JobTaxiService.Controllers.Nsi
             {
                 result.Add(new LocationDto
                 {
-                    Id = item.Id,
-                    OblName = item.OblName,
-                    Obl = item.Obl
+                    Id = item.CatId,
+                    OblName = item.CatName                    
                 });
             }
             return result;
@@ -54,6 +53,42 @@ namespace JobTaxiService.Controllers.Nsi
                 {
                     CatId = item.CatId,
                     Cats = item.Cats                    
+                });
+            }
+            return result;
+        }
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("obl/nav")]
+        public async Task<IEnumerable<Location1Dto>> GetLocationOblast(int rows, int page)
+        {
+            var result = new List<Location1Dto>();
+            _logger.LogInformation("GetLocation1Dto");
+            var resultData = _jobRepository.GetLocation1(rows, page);
+            foreach (var item in resultData)
+            {
+                result.Add(new Location1Dto
+                {
+                    CatId = item.CatId,
+                    Cats = item.CatName
+                });
+            }
+            return result;
+        }
+
+        [HttpGet]
+        [Route("gor/nav")]
+        public async Task<IEnumerable<Location1Dto>> GetLocationGorod(int rows, int page)
+        {
+            var result = new List<Location1Dto>();
+            _logger.LogInformation("GetLocation1Dto");
+            var resultData = _jobRepository.GetLocationGorod(rows, page);
+            foreach (var item in resultData)
+            {
+                result.Add(new Location1Dto
+                {
+                    CatId = item.GorId,
+                    Cats = item.GorName
                 });
             }
             return result;

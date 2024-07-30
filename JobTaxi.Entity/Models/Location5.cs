@@ -9,9 +9,11 @@ public partial class Location5
 
     public int? OblId { get; set; }
 
-    public string? Obl { get; set; }
-
     public string? OblName { get; set; }
+
+    public int? GorId { get; set; }
+
+    public string? GorName { get; set; }
 
     public string? Obls { get; set; }
 }

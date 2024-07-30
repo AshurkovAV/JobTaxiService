@@ -5,6 +5,8 @@ using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Text.Json.Serialization;
 using System.Transactions;
 
 namespace JobTaxi.Entity
@@ -278,6 +280,46 @@ namespace JobTaxi.Entity
             return result;
         }
 
+        public IEnumerable<Locatioin1> GetLocation1(int rows, int page)
+        {
+            var result = new List<Locatioin1>();
+            try
+            {
+                using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+                {
+                    var data = db.Locatioin1s
+                        .OrderBy(b => b.CatId)
+                        .Skip((page - 1) * rows) //пропускает определенное количество элементов Страница
+                        .Take(rows) //извлекает определенное число элементов
+                        .ToList();
+                    result = data;
+                }
+            }
+            catch (Exception ex)
+            { _logger.LogInformation("Processing {0}", ex.Message); }
+            return result;
+        }
+
+        public IEnumerable<Location5> GetLocationGorod(int rows, int page)
+        {
+            var result = new List<Location5>();
+            try
+            {
+                using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+                {
+                    var data = db.Location5s
+                        .OrderBy(b => b.Id)
+                        .Skip((page - 1) * rows) //пропускает определенное количество элементов Страница
+                        .Take(rows) //извлекает определенное число элементов
+                        .ToList();
+                    result = data;
+                }
+            }
+            catch (Exception ex)
+            { _logger.LogInformation("Processing {0}", ex.Message); }
+            return result;
+        }
+
         public IEnumerable<int> GetParksIdAll()
         {
             var result = new List<int>();
@@ -544,12 +586,12 @@ namespace JobTaxi.Entity
             return result;
         }
 
-        public IEnumerable<Location5> GetLocation()
+        public IEnumerable<Locatioin1> GetLocation()
         {
-            var result = new List<Location5>();
+            var result = new List<Locatioin1>();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
-                var data = db.Location5s.ToList();
+                var data = db.Locatioin1s.ToList();
                 result = data;
             }
             return result;
@@ -615,6 +657,17 @@ namespace JobTaxi.Entity
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
                 var data = db.FirstDays.Where(x => x.Active == true).ToList();
+                result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<CatalogAutoClass> GetAutoClass()
+        {
+            var result = new List<CatalogAutoClass>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.CatalogAutoClasses.Where(x => x.Active == true).ToList();
                 result = data;
             }
             return result;
@@ -781,6 +834,20 @@ namespace JobTaxi.Entity
             {
                 var user = db.Users.FirstOrDefault(x=>x.DefaultPhone == defaultPhone && x.DefaultEmail == defaultEmail);
                 result = user;                
+            }
+            return result;
+        }
+
+        public RoutePage CreateRoutePage(RoutePage routePage)
+        {
+            var result = new RoutePage();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                db.RoutePages.Add(routePage);
+                db.Entry(routePage).State = EntityState.Added;
+
+                db.SaveChanges();
+                result = routePage;
             }
             return result;
         }

@@ -67,8 +67,6 @@ namespace JobTaxiService.Controllers.User
                 InspectionId = usersFilterDto.InspectionId,
                 MinRentalPeriodId = usersFilterDto.MinRentalPeriodId,
 
-
-
             });
             result = resultData;
             return new ObjectResult(resultData) { StatusCode = StatusCodes.Status201Created }; ;

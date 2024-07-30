@@ -21,7 +21,13 @@ public partial class Offer
 
     public DateTime UpdatedAt { get; set; }
 
+    public int? StatusId { get; set; }
+
+    public string? Comments { get; set; }
+
     public virtual Driver Driver { get; set; } = null!;
 
     public virtual Park Park { get; set; } = null!;
+
+    public virtual OffersStatus? Status { get; set; }
 }

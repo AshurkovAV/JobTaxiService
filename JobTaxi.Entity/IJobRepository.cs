@@ -40,12 +40,16 @@ namespace JobTaxi.Entity
         public IEnumerable<DriversConstraint> GetDriversConstraint();
         public IEnumerable<WorkCondition> GetWorkCondition();
         public IEnumerable<DepositRet> GetDepositRet();
-        public IEnumerable<Location5> GetLocation();
+        public IEnumerable<Locatioin1> GetLocation();
         public IEnumerable<Locatioin1> GetLocation1();
+        public IEnumerable<Locatioin1> GetLocation1(int rows, int page);
+        public IEnumerable<Location5> GetLocationGorod(int rows, int page);
         public IEnumerable<Inspection> GetInspection();
         public IEnumerable<Waybill> GetWaybill();
         public IEnumerable<WorkRadius> GetWorkRadius();
         public IEnumerable<MinRentalPeriod> GetMinRentalPeriod();        
         public IEnumerable<FirstDay> GetFirstDay();
+        public IEnumerable<CatalogAutoClass> GetAutoClass();
+        public RoutePage CreateRoutePage(RoutePage routePage);
     }
 }
