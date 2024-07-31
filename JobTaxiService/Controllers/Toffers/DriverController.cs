@@ -3,7 +3,6 @@ using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Dto;
-using JobTaxiService.Dto;
 
 namespace JobTaxiService.Controllers.Toffers
 {

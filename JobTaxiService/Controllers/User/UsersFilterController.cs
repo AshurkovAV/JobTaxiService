@@ -42,34 +42,28 @@ namespace JobTaxiService.Controllers.User
         [Route("create/")]
         public async Task<IActionResult> Create([FromBody] UsersFilterDto usersFilterDto)
         {
-            var result = new UsersFilter();
-            _logger.LogInformation("CreateUsersFilter");
-            var resultData = _jobRepository.CreateUpdateUsersFilter(new UsersFilter
+            try
             {
-                FilterName = usersFilterDto.FilterName,
-                AddressLatitude = usersFilterDto.AddressLatitude,
-                AddressLongitude = usersFilterDto.AddressLongitude,
-                ParkPercent = usersFilterDto.ParkPercent,
-                SelfEmployed = usersFilterDto.SelfEmployed,
-                SelfEmployedSum = usersFilterDto.SelfEmployedSum,
-                WithdrawMoneyId = usersFilterDto.WithdrawMoneyId,
-                WithdrawMoney = usersFilterDto.WithdrawMoney,
-                Penalties = usersFilterDto.Penalties,
-                Deposit = usersFilterDto.Deposit,
-                Insurance = usersFilterDto.Insurance,
-                RentalWriteOffTime = usersFilterDto.RentalWriteOffTime,
-                GasThrowTaxometr = usersFilterDto.GasThrowTaxometr,
-                FirstDayId = usersFilterDto.FirstDayId,
-                Ransom = usersFilterDto.Ransom,
-                DepositRetId = usersFilterDto.DepositRetId,
-                WaybillsId = usersFilterDto.WaybillsId,
-                WorkRadiusId = usersFilterDto.WorkRadiusId,
-                InspectionId = usersFilterDto.InspectionId,
-                MinRentalPeriodId = usersFilterDto.MinRentalPeriodId,
+                var result = new UsersFilterDto();
+                _logger.LogInformation("CreateUsersFilter");
+                var resultData = _jobRepository.CreateUpdateUsersFilter(new UsersFilter
+                {
+                    FilterName = usersFilterDto.FilterName,
+                    AddressLatitude = usersFilterDto.AddressLatitude,
+                    AddressLongitude = usersFilterDto.AddressLongitude,
+                    ParkPercent = usersFilterDto.ParkPercent,
 
-            });
-            result = resultData;
-            return new ObjectResult(resultData) { StatusCode = StatusCodes.Status201Created }; ;
+                });
+                usersFilterDto.Id = resultData.Id;
+                result = usersFilterDto;
+                return new ObjectResult(resultData) { StatusCode = StatusCodes.Status201Created }; ;
+            }
+            catch (Exception ex)
+            {
+                
+                return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status502BadGateway };
+            }
+            
         }
     }
 }

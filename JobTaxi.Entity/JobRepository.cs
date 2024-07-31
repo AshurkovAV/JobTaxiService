@@ -265,6 +265,11 @@ namespace JobTaxi.Entity
                             CountWork = (from count in db.ParksWorkConditions
                                          where count.ParkGuid == x.ParkGuid
                                          select count).Count(),
+                            SelectPark = (from count in db.SelectParks
+                                          where count.ParkId == x.Id
+                                          && count.Active == true
+                                          && count.UserId == userId
+                                          select count).Count()
 
                         }).Join(selectpark,
                         park => park.Id, selectpark => selectpark.ParkId, (park, selectpark) => park);
@@ -503,7 +508,8 @@ namespace JobTaxi.Entity
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
                 var data = db.UsersFilters.FirstOrDefault(x => x.Id == id
-                 && x.Active == true);
+                 && x.Active == true
+                 );
                 result = data;
             }
             return result;

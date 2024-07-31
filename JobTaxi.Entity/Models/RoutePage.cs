@@ -8,8 +8,8 @@ public partial class RoutePage
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
-   
-    public bool Active { get; set; } = true;
+
+    public bool? Active { get; set; }
 
     public string CreatedBy { get; set; } = null!;
 

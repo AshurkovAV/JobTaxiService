@@ -46,7 +46,6 @@ public partial class TaxiAdministrationContext : DbContext
     public virtual DbSet<LoginFailedAttempt> LoginFailedAttempts { get; set; }
 
     public virtual DbSet<MenuWeb> MenuWebs { get; set; }
-    public virtual DbSet<RoutePage> RoutePages { get; set; }
 
     public virtual DbSet<MinRentalPeriod> MinRentalPeriods { get; set; }
 
@@ -71,6 +70,8 @@ public partial class TaxiAdministrationContext : DbContext
     public virtual DbSet<RightsWeb> RightsWebs { get; set; }
 
     public virtual DbSet<RolesWeb> RolesWebs { get; set; }
+
+    public virtual DbSet<RoutePage> RoutePages { get; set; }
 
     public virtual DbSet<RulesWeb> RulesWebs { get; set; }
 
@@ -420,36 +421,6 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("NAME");
-            entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("updated_at");
-            entity.Property(e => e.UpdatedBy)
-                .HasMaxLength(64)
-                .IsUnicode(false)
-                .HasDefaultValueSql("('system')")
-                .HasColumnName("updated_by");
-        });
-
-        modelBuilder.Entity<RoutePage>(entity =>
-        {
-            entity.ToTable("route_page");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Active).HasColumnName("active");
-            entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("created_at");
-            entity.Property(e => e.CreatedBy)
-                .HasMaxLength(64)
-                .IsUnicode(false)
-                .HasDefaultValueSql("('system')")
-                .HasColumnName("created_by");
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("name");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -1098,6 +1069,43 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("ROLE_NAME");
         });
 
+        modelBuilder.Entity<RoutePage>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("route_page");
+
+            entity.Property(e => e.Active)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("name");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(150)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+        });
+
         modelBuilder.Entity<RulesWeb>(entity =>
         {
             entity.HasKey(e => e.RuleId)
@@ -1388,7 +1396,10 @@ public partial class TaxiAdministrationContext : DbContext
             entity.ToTable("users_filter");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Active).HasColumnName("active");
+            entity.Property(e => e.Active)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("active");
             entity.Property(e => e.AddressLatitude)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -1406,40 +1417,16 @@ public partial class TaxiAdministrationContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("('system')")
                 .HasColumnName("created_by");
-            entity.Property(e => e.Deposit)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("deposit");
-            entity.Property(e => e.DepositRetId).HasColumnName("deposit_ret_id");
             entity.Property(e => e.FilterName)
                 .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("filter_name");
-            entity.Property(e => e.FirstDayId).HasColumnName("first_day_id");
-            entity.Property(e => e.GasThrowTaxometr).HasColumnName("gas_throw_taxometr");
-            entity.Property(e => e.InspectionId).HasColumnName("inspection_id");
-            entity.Property(e => e.Insurance).HasColumnName("insurance");
             entity.Property(e => e.Ip4)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasDefaultValueSql("((2130706433))")
                 .HasColumnName("ip4");
-            entity.Property(e => e.MinRentalPeriodId).HasColumnName("min_rental_period_id");
             entity.Property(e => e.ParkPercent).HasColumnName("park_percent");
-            entity.Property(e => e.Penalties)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("penalties");
-            entity.Property(e => e.Ransom).HasColumnName("ransom");
-            entity.Property(e => e.RentalWriteOffTime)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("rental_write_off_time");
-            entity.Property(e => e.SelfEmployed).HasColumnName("self_employed");
-            entity.Property(e => e.SelfEmployedSum)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("self_employed_sum");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -1449,10 +1436,6 @@ public partial class TaxiAdministrationContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("('system')")
                 .HasColumnName("updated_by");
-            entity.Property(e => e.WaybillsId).HasColumnName("waybills_id");
-            entity.Property(e => e.WithdrawMoney).HasColumnName("withdraw_money");
-            entity.Property(e => e.WithdrawMoneyId).HasColumnName("withdraw_money_id");
-            entity.Property(e => e.WorkRadiusId).HasColumnName("work_radius_id");
         });
 
         modelBuilder.Entity<UsersLog>(entity =>
