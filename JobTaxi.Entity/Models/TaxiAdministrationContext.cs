@@ -1072,7 +1072,10 @@ public partial class TaxiAdministrationContext : DbContext
         modelBuilder.Entity<RoutePage>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk__route_page");
-           
+
+            entity.ToTable("route_page");
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Active)
                 .IsRequired()
                 .HasDefaultValueSql("((1))")
@@ -1083,15 +1086,10 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("created_at");
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(150)
-                .IsUnicode(false)
                 .HasDefaultValueSql("('system')")
                 .HasColumnName("created_by");
-            entity.Property(e => e.Id)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(50)
-                .IsUnicode(false)
                 .HasColumnName("name");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -1099,7 +1097,6 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("updated_at");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(150)
-                .IsUnicode(false)
                 .HasDefaultValueSql("('system')")
                 .HasColumnName("updated_by");
         });
