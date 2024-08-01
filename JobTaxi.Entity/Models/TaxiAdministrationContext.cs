@@ -1071,10 +1071,8 @@ public partial class TaxiAdministrationContext : DbContext
 
         modelBuilder.Entity<RoutePage>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("route_page");
-
+            entity.HasKey(e => e.Id).HasName("pk__route_page");
+           
             entity.Property(e => e.Active)
                 .IsRequired()
                 .HasDefaultValueSql("((1))")
@@ -1421,6 +1419,7 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasMaxLength(150)
                 .IsUnicode(false)
                 .HasColumnName("filter_name");
+            entity.Property(e => e.FilterUserId).HasColumnName("filter_user_id");
             entity.Property(e => e.Ip4)
                 .HasMaxLength(20)
                 .IsUnicode(false)

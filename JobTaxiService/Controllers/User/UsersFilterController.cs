@@ -5,6 +5,7 @@ using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Dto;
 using JobTaxiService.Dto;
 using JobTaxi.Entity.Dto.User;
+using JobTaxi.Entity.Dto.Nsi;
 
 namespace JobTaxiService.Controllers.User
 {
@@ -35,7 +36,38 @@ namespace JobTaxiService.Controllers.User
             return result;
         }
 
-        
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("us/")]
+        public async Task<IEnumerable<UsersFilterDto>> GetToUserId(int userId)
+        {
+            var result = new List<UsersFilterDto>();
+            _logger.LogInformation("GetUsersFilter");
+            var resultData = _jobRepository.GetUsersFilterToUserId(userId);
+            foreach (var item in resultData)
+            {
+                result.Add(new UsersFilterDto
+                {
+                    Id = item.Id,
+                    FilterName = item.FilterName,
+                    AddressLatitude = item.AddressLatitude, 
+                    AddressLongitude = item.AddressLongitude,
+                    FilterUserId = item.FilterUserId,
+                    ParkPercent = item.ParkPercent
+                });
+            }            
+            return result;
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("count/")]
+        public async Task<int> GetCount(int userId)
+        {
+            _logger.LogInformation("GetFilterCount");
+            var resultCars = _jobRepository.GetFilterCountAll(userId);
+            return resultCars;
+        }
 
         [HttpPost]
         [Produces("application/json")]
@@ -52,11 +84,12 @@ namespace JobTaxiService.Controllers.User
                     AddressLatitude = usersFilterDto.AddressLatitude,
                     AddressLongitude = usersFilterDto.AddressLongitude,
                     ParkPercent = usersFilterDto.ParkPercent,
+                    FilterUserId = usersFilterDto.FilterUserId,
 
                 });
                 usersFilterDto.Id = resultData.Id;
                 result = usersFilterDto;
-                return new ObjectResult(resultData) { StatusCode = StatusCodes.Status201Created }; ;
+                return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created }; ;
             }
             catch (Exception ex)
             {

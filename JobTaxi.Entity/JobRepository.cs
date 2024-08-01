@@ -422,6 +422,26 @@ namespace JobTaxi.Entity
             return result;
         }
 
+        public int GetFilterCountAll(int userId)
+        {
+            int result = 0;
+            try
+            {
+                using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+                {
+                    var parks = db.UsersFilters.Count(x => x.FilterUserId == userId
+                    && x.Active == true
+                    );
+                    result = parks;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Processing {0}", ex.Message);
+            }
+            return result;
+        }
+
         public IEnumerable<Car> GetCar()
         {
             var result = new List<Car>();
@@ -511,6 +531,19 @@ namespace JobTaxi.Entity
                  && x.Active == true
                  );
                 result = data;
+            }
+            return result;
+        }
+
+        public IEnumerable<UsersFilter> GetUsersFilterToUserId(int userId)
+        {
+            var result = new List<UsersFilter>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.UsersFilters.Where(x => x.FilterUserId == userId
+                 && x.Active == true
+                 );
+                result = data.ToList();
             }
             return result;
         }

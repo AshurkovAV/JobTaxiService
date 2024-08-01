@@ -15,6 +15,8 @@ public partial class UsersFilter
 
     public double? ParkPercent { get; set; }
 
+    public int FilterUserId { get; set; }
+
     public bool? Active { get; set; }
 
     public string Ip4 { get; set; } = null!;

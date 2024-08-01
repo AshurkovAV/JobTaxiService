@@ -13,7 +13,8 @@ public partial class UsersFilterDto
 
     public string? AddressLongitude { get; set; }
 
-    public double ParkPercent { get; set; }   
+    public double? ParkPercent { get; set; }
+    public int FilterUserId { get; set; }
 
-   
+
 }

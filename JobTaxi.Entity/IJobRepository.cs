@@ -33,9 +33,11 @@ namespace JobTaxi.Entity
 
         public Offer GetOffer(int id);
         public UsersFilter GetUsersFilter(int id);
+        public IEnumerable<UsersFilter> GetUsersFilterToUserId(int userId);
 
         public Offer CreateUpdateOffer(Offer offer);
         public UsersFilter CreateUpdateUsersFilter(UsersFilter usersFilter);
+        public int GetFilterCountAll(int userId);
 
         public IEnumerable<DriversConstraint> GetDriversConstraint();
         public IEnumerable<WorkCondition> GetWorkCondition();
