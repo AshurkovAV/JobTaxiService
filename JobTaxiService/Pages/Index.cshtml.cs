@@ -25,15 +25,15 @@ namespace JobTaxiService.Pages
         public async void OnGet(string code)
         {
             var iPAddress = HttpContext.Connection.RemoteIpAddress;
-            if (code != null)
-            {
-                _logger.LogInformation($"Пришли на страницу landinga {iPAddress} {DateTime.Now} {code}");
-                // var route = _jobRepository.CreateRoutePage(new RoutePage { Name = code });
-            }
             Console.WriteLine($"Пришли на страницу landinga {iPAddress} {DateTime.Now}");
             try
             {
-
+                
+                if (code != null)
+                {
+                    _logger.LogInformation($"Пришли на страницу landinga {iPAddress} {DateTime.Now} {code}");
+                    var route = _jobRepository.CreateRoutePage(new RoutePage { Name = code });
+                }
             }
             catch (Exception ex)
             {

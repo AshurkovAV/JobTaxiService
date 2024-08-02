@@ -36,8 +36,23 @@ namespace JobTaxiService.Controllers.Toffers
 
             // Return the file. A byte array can also be used instead of a stream
             return new FileStreamResult(stream, "video/mp4");
-        }    
+        }
 
-        
+        [HttpGet]
+        [Route("reply/")]
+        public IActionResult GetReply()
+        {
+            // Since this is just and example, I am using a local file located inside wwwroot
+            // Afterwards file is converted into a stream
+            string pathRoot = Directory.GetCurrentDirectory();
+            _logger.LogInformation("DownloadFileController   " + pathRoot);
+            var path = Path.Combine(pathRoot, "video/reply_1.mp4");
+            var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            // Return the file. A byte array can also be used instead of a stream
+            return new FileStreamResult(stream, "video/mp4");
+        }
+
+
     }
 }
