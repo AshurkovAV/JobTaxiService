@@ -53,7 +53,8 @@ namespace JobTaxiService.Controllers.User
                     AddressLatitude = item.AddressLatitude, 
                     AddressLongitude = item.AddressLongitude,
                     FilterUserId = item.FilterUserId,
-                    ParkPercent = item.ParkPercent
+                    ParkPercent = item.ParkPercent,
+                    IsPush = item.IsPush
                 });
             }            
             return result;
@@ -67,6 +68,16 @@ namespace JobTaxiService.Controllers.User
             _logger.LogInformation("GetFilterCount");
             var resultCars = _jobRepository.GetFilterCountAll(userId);
             return resultCars;
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("ispush/")]
+        public async Task<bool> Ispush(int id, bool push)
+        {
+            _logger.LogInformation("Ispush");
+            var resultdata = _jobRepository.FilterIsPush(id, push);
+            return resultdata;
         }
 
         [HttpPost]
@@ -85,6 +96,7 @@ namespace JobTaxiService.Controllers.User
                     AddressLongitude = usersFilterDto.AddressLongitude,
                     ParkPercent = usersFilterDto.ParkPercent,
                     FilterUserId = usersFilterDto.FilterUserId,
+                    IsPush = usersFilterDto.IsPush
 
                 });
                 usersFilterDto.Id = resultData.Id;

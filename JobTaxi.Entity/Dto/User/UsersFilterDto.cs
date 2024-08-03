@@ -15,6 +15,6 @@ public partial class UsersFilterDto
 
     public double? ParkPercent { get; set; }
     public int FilterUserId { get; set; }
-
+    public bool IsPush { get; set; }
 
 }

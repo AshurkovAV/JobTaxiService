@@ -77,6 +77,10 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<Schem> Schems { get; set; }
 
+    public virtual DbSet<SelectAutoClass> SelectAutoClasses { get; set; }
+
+    public virtual DbSet<SelectLocationFilter> SelectLocationFilters { get; set; }
+
     public virtual DbSet<SelectPark> SelectParks { get; set; }
 
     public virtual DbSet<Update> Updates { get; set; }
@@ -1167,6 +1171,82 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasColumnName("updated_by");
         });
 
+        modelBuilder.Entity<SelectAutoClass>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_select_auto_class_id");
+
+            entity.ToTable("select_auto_class");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Active)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("active");
+            entity.Property(e => e.AutoClassId).HasColumnName("auto_class_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Ip4)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValueSql("((2130706433))")
+                .HasColumnName("ip4");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+        });
+
+        modelBuilder.Entity<SelectLocationFilter>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_select_location_filter_id");
+
+            entity.ToTable("select_location_filter");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Active)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("active");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("created_by");
+            entity.Property(e => e.Ip4)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValueSql("((2130706433))")
+                .HasColumnName("ip4");
+            entity.Property(e => e.LocationId).HasColumnName("location_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(64)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('system')")
+                .HasColumnName("updated_by");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+        });
+
         modelBuilder.Entity<SelectPark>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_select_parks_id");
@@ -1422,6 +1502,10 @@ public partial class TaxiAdministrationContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("((2130706433))")
                 .HasColumnName("ip4");
+            entity.Property(e => e.IsPush)
+                .IsRequired()
+                .HasDefaultValueSql("((1))")
+                .HasColumnName("is_push");
             entity.Property(e => e.ParkPercent).HasColumnName("park_percent");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")

@@ -3,21 +3,13 @@ using System.Collections.Generic;
 
 namespace JobTaxi.Entity.Models;
 
-public partial class UsersFilter
+public partial class SelectLocationFilter
 {
     public int Id { get; set; }
 
-    public string FilterName { get; set; } = null!;
+    public int LocationId { get; set; }
 
-    public string? AddressLatitude { get; set; }
-
-    public string? AddressLongitude { get; set; }
-
-    public double? ParkPercent { get; set; }
-
-    public int FilterUserId { get; set; }
-
-    public bool? IsPush { get; set; }
+    public int UserId { get; set; }
 
     public bool? Active { get; set; }
 

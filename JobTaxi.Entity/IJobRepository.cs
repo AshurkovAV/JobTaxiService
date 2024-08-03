@@ -37,6 +37,7 @@ namespace JobTaxi.Entity
 
         public Offer CreateUpdateOffer(Offer offer);
         public UsersFilter CreateUpdateUsersFilter(UsersFilter usersFilter);
+        public bool FilterIsPush(int filterId, bool push);
         public int GetFilterCountAll(int userId);
 
         public IEnumerable<DriversConstraint> GetDriversConstraint();

@@ -866,6 +866,19 @@ namespace JobTaxi.Entity
             return result;
         }
 
+        public bool FilterIsPush(int filterId, bool push)
+        {
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.UsersFilters.FirstOrDefault(x=>x.Id == filterId);
+                if (data == null)return false;
+                data.IsPush = push;
+                db.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         public User GetUser(string defaultPhone, string defaultEmail)
         {
             var result = new User();
