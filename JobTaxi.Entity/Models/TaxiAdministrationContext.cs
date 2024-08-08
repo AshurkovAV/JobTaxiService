@@ -1206,6 +1206,7 @@ public partial class TaxiAdministrationContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("('system')")
                 .HasColumnName("updated_by");
+            entity.Property(e => e.UserFilterId).HasColumnName("user_filter_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });
 
@@ -1244,6 +1245,7 @@ public partial class TaxiAdministrationContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("('system')")
                 .HasColumnName("updated_by");
+            entity.Property(e => e.UserFilterId).HasColumnName("user_filter_id");
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });
 

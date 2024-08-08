@@ -108,7 +108,29 @@ namespace JobTaxiService.Controllers.User
                 
                 return new ObjectResult(ex.Message) { StatusCode = StatusCodes.Status502BadGateway };
             }
-            
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("delete/")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                _logger.LogInformation("DeleteUsersFilter");
+                var selectPark = _jobRepository.DeleteUserFilter(id);
+                if (selectPark)
+                { return new ObjectResult(true) { StatusCode = StatusCodes.Status200OK }; }
+                else
+                {
+                    return new ObjectResult(false) { StatusCode = StatusCodes.Status400BadRequest };
+                }
+            }
+            catch
+            {
+                return new ObjectResult(false) { StatusCode = StatusCodes.Status400BadRequest }; ;
+            }
+
         }
     }
 }

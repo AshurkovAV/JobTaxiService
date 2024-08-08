@@ -17,7 +17,7 @@ public partial class UsersFilter
 
     public int FilterUserId { get; set; }
 
-    public bool? IsPush { get; set; }
+    public bool IsPush { get; set; }
 
     public bool? Active { get; set; }
 

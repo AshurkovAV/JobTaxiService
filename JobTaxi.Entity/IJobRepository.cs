@@ -25,6 +25,7 @@ namespace JobTaxi.Entity
         public User GetUser(string defaultPhone, string defaultEmail);
         public SelectPark InsertSelectPark(SelectPark selectPark);
         public bool DeleteSelectPark(int selectParkId, int userId);
+        public bool DeleteUserFilter(int id);
         public Driver GetDrivers(int id);
         public IEnumerable<SelectPark> GetSelectPark(int userId);
         public SelectPark GetSelectPark(int selectPark, int userId);
@@ -36,6 +37,8 @@ namespace JobTaxi.Entity
         public IEnumerable<UsersFilter> GetUsersFilterToUserId(int userId);
 
         public Offer CreateUpdateOffer(Offer offer);
+        public SelectAutoClass CreateSelectAutoClass(SelectAutoClass selectAutoClass);
+        public SelectLocationFilter CreateSelectLocationFilter(SelectLocationFilter selectLocationFilter);
         public UsersFilter CreateUpdateUsersFilter(UsersFilter usersFilter);
         public bool FilterIsPush(int filterId, bool push);
         public int GetFilterCountAll(int userId);

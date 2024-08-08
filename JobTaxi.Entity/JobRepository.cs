@@ -4,6 +4,7 @@ using JobTaxi.Entity.Dto.Nsi;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json.Serialization;
@@ -265,11 +266,7 @@ namespace JobTaxi.Entity
                             CountWork = (from count in db.ParksWorkConditions
                                          where count.ParkGuid == x.ParkGuid
                                          select count).Count(),
-                            SelectPark = (from count in db.SelectParks
-                                          where count.ParkId == x.Id
-                                          && count.Active == true
-                                          && count.UserId == userId
-                                          select count).Count()
+                            SelectPark = 1
 
                         }).Join(selectpark,
                         park => park.Id, selectpark => selectpark.ParkId, (park, selectpark) => park);
@@ -731,6 +728,25 @@ namespace JobTaxi.Entity
             }
             return false;
         }
+
+        public bool DeleteUserFilter(int id)
+        {
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.UsersFilters.FirstOrDefault(
+                    x => x.Id == id
+                    && x.Active == true);
+                if (data == null)
+                {
+                    return false;
+                }
+                data.Active = false;
+                db.UsersFilters.Attach(data);
+                db.SaveChanges();
+                return true;
+            }
+            return false;
+        }
         public IEnumerable<CarsPicture> GetCarsPicture()
         {
             var result = new List<CarsPicture>();
@@ -848,6 +864,34 @@ namespace JobTaxi.Entity
 
                 db.SaveChanges();
                 result = offer;               
+            }
+            return result;
+        }
+
+        public SelectAutoClass CreateSelectAutoClass(SelectAutoClass selectAutoClass)
+        {
+            var result = new SelectAutoClass();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                db.SelectAutoClasses.Add(selectAutoClass);
+                db.Entry(selectAutoClass).State = EntityState.Added;
+
+                db.SaveChanges();
+                result = selectAutoClass;
+            }
+            return result;
+        }
+
+        public SelectLocationFilter CreateSelectLocationFilter(SelectLocationFilter selectLocationFilter)
+        {
+            var result = new SelectLocationFilter();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                db.SelectLocationFilters.Add(selectLocationFilter);
+                db.Entry(selectLocationFilter).State = EntityState.Added;
+
+                db.SaveChanges();
+                result = selectLocationFilter;
             }
             return result;
         }

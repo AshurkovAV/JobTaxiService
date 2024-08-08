@@ -11,6 +11,8 @@ public partial class SelectLocationFilter
 
     public int UserId { get; set; }
 
+    public int UserFilterId { get; set; }
+
     public bool? Active { get; set; }
 
     public string Ip4 { get; set; } = null!;
