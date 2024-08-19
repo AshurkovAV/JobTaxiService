@@ -2,7 +2,6 @@ using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
-using JobTaxi.Entity.Dto;
 using JobTaxi.Entity.Dto.User;
 
 namespace JobTaxiService.Controllers.User
@@ -23,24 +22,39 @@ namespace JobTaxiService.Controllers.User
             _logger = logger;
         }
 
+        [HttpGet]
+        [Produces("application/json")]
+        public async Task<List<SelectAuto>> Get(int userId, int filterId)
+        {
+            var result = new List<SelectAuto>();
+            _logger.LogInformation("GetGetSelectAutoFilter");
+            var resultData = _jobRepository.GetSelectAutoFilter(userId, filterId);
+            result = resultData;
+            return result;
+        }
+
+
         [HttpPost]
         [Produces("application/json")]
         [Route("create/")]
         public async Task<IActionResult> Create([FromBody] SelectAutoClassDto selectAutoClassDto)
         {
-            var result = new SelectAutoClass();
+            var result = new List<SelectAutoClass>();
             _logger.LogInformation("CreateSelectAutoClass");
             try 
-            {   
-                var resultdata = _jobRepository.CreateSelectAutoClass(new SelectAutoClass
+            {
+                foreach (var item in selectAutoClassDto.AutoClassIds)
                 {
-                    AutoClassId = selectAutoClassDto.AutoClassId,
-                    UserId = selectAutoClassDto.UserId,
-                    UserFilterId = selectAutoClassDto.UserFilterId,
-                });
-                result = resultdata;
+                    var resultdata = _jobRepository.CreateSelectAutoClass(new SelectAutoClass
+                    {
+                        AutoClassId = item,
+                        UserId = selectAutoClassDto.UserId,
+                        UserFilterId = selectAutoClassDto.UserFilterId,
+                    });
+                    result.Add(resultdata);
+                }
 
-                return new ObjectResult(resultdata) { StatusCode = StatusCodes.Status201Created }; 
+                return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created }; 
             } 
             catch { return new ObjectResult(result) { StatusCode = StatusCodes.Status502BadGateway }; }
             

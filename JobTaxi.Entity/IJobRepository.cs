@@ -1,5 +1,6 @@
 ﻿using JobTaxi.Entity.Dto;
 using JobTaxi.Entity.Dto.Nsi;
+using JobTaxi.Entity.Dto.User;
 using JobTaxi.Entity.Models;
 
 namespace JobTaxi.Entity
@@ -31,18 +32,15 @@ namespace JobTaxi.Entity
         public SelectPark GetSelectPark(int selectPark, int userId);
         public int GetSelectParkCount(int userId);
         public Driver CreateUpdateDriver(Driver driver);
-
         public Offer GetOffer(int id);
         public UsersFilter GetUsersFilter(int id);
         public IEnumerable<UsersFilter> GetUsersFilterToUserId(int userId);
-
         public Offer CreateUpdateOffer(Offer offer);
         public SelectAutoClass CreateSelectAutoClass(SelectAutoClass selectAutoClass);
         public SelectLocationFilter CreateSelectLocationFilter(SelectLocationFilter selectLocationFilter);
         public UsersFilter CreateUpdateUsersFilter(UsersFilter usersFilter);
         public bool FilterIsPush(int filterId, bool push);
         public int GetFilterCountAll(int userId);
-
         public IEnumerable<DriversConstraint> GetDriversConstraint();
         public IEnumerable<WorkCondition> GetWorkCondition();
         public IEnumerable<DepositRet> GetDepositRet();
@@ -57,5 +55,7 @@ namespace JobTaxi.Entity
         public IEnumerable<FirstDay> GetFirstDay();
         public IEnumerable<CatalogAutoClass> GetAutoClass();
         public RoutePage CreateRoutePage(RoutePage routePage);
+        public List<SelectLocation> GetSelectLocationFilter(int userId, int filterId);
+        public List<SelectAuto> GetSelectAutoFilter(int userId, int filterId);
     }
 }

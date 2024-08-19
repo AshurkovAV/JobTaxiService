@@ -2,10 +2,7 @@ using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
-using JobTaxi.Entity.Dto;
-using JobTaxiService.Dto;
 using JobTaxi.Entity.Dto.User;
-using JobTaxi.Entity.Dto.Nsi;
 
 namespace JobTaxiService.Controllers.User
 {

@@ -2,7 +2,6 @@ using JobTaxi.Entity;
 using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
-using JobTaxi.Entity.Dto;
 using JobTaxi.Entity.Dto.User;
 
 namespace JobTaxiService.Controllers.User
@@ -23,25 +22,39 @@ namespace JobTaxiService.Controllers.User
             _logger = logger;
         }
 
-       
+        [HttpGet]
+        [Produces("application/json")]
+        public async Task<List<SelectLocation>> Get(int userId, int filterId)
+        {
+            var result = new List<SelectLocation>();
+            _logger.LogInformation("GetSelectLocationFilter");
+            var resultData = _jobRepository.GetSelectLocationFilter(userId, filterId);
+            result = resultData;
+            return result;
+        }
+
         [HttpPost]
         [Produces("application/json")]
         [Route("create/")]
         public async Task<IActionResult> Create([FromBody] SelectLocationFilterDto selectLocationFilterDto)
         {
-            var result = new SelectLocationFilter();
+            var result = new List<SelectLocationFilter>();
             _logger.LogInformation("CreateSelectLocationFilter");
             try 
-            {   
-                var resultdata = _jobRepository.CreateSelectLocationFilter(new SelectLocationFilter
+            {
+                foreach (var item in selectLocationFilterDto.LocationIds)
                 {
-                    LocationId = selectLocationFilterDto.LocationId,
-                    UserId = selectLocationFilterDto.UserId,
-                    UserFilterId = selectLocationFilterDto.UserFilterId,
-                });
-                result = resultdata;
+                    var resultdata = _jobRepository.CreateSelectLocationFilter(new SelectLocationFilter
+                    {
+                        LocationId = item,
+                        UserId = selectLocationFilterDto.UserId,
+                        UserFilterId = selectLocationFilterDto.UserFilterId,
+                    });
+                    result.Add(resultdata);
+                }
+                
 
-                return new ObjectResult(resultdata) { StatusCode = StatusCodes.Status201Created }; 
+                return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created }; 
             } 
             catch { return new ObjectResult(result) { StatusCode = StatusCodes.Status502BadGateway }; }
             

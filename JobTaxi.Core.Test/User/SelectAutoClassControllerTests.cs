@@ -23,7 +23,7 @@ namespace JobTaxi.Core.Test.User
             // Act
             var result = controller.Create(new Entity.Dto.User.SelectAutoClassDto 
             { 
-                AutoClassId = 1,
+                //AutoClassIds = 1,
                 UserFilterId = 1,
                 UserId = 129
 

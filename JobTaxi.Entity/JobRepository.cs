@@ -1,6 +1,7 @@
 ﻿using Azure;
 using JobTaxi.Entity.Dto;
 using JobTaxi.Entity.Dto.Nsi;
+using JobTaxi.Entity.Dto.User;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Models;
 using Microsoft.EntityFrameworkCore;
@@ -873,6 +874,15 @@ namespace JobTaxi.Entity
             var result = new SelectAutoClass();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
+                var data = db.SelectAutoClasses.FirstOrDefault(x=>
+                    x.AutoClassId == selectAutoClass.AutoClassId
+                    && x.UserId == selectAutoClass.UserId
+                    && x.UserFilterId == selectAutoClass.UserFilterId
+                    && x.Active == true);
+                if (data != null)
+                {
+                    return data;
+                }
                 db.SelectAutoClasses.Add(selectAutoClass);
                 db.Entry(selectAutoClass).State = EntityState.Added;
 
@@ -887,6 +897,15 @@ namespace JobTaxi.Entity
             var result = new SelectLocationFilter();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
+                var data = db.SelectLocationFilters.FirstOrDefault(x =>
+                    x.LocationId == selectLocationFilter.LocationId
+                    && x.UserId == selectLocationFilter.UserId
+                    && x.UserFilterId == selectLocationFilter.UserFilterId
+                    && x.Active == true);
+                if (data != null)
+                {
+                    return data;
+                }
                 db.SelectLocationFilters.Add(selectLocationFilter);
                 db.Entry(selectLocationFilter).State = EntityState.Added;
 
@@ -906,6 +925,40 @@ namespace JobTaxi.Entity
 
                 db.SaveChanges();
                 result = usersFilter;
+            }
+            return result;
+        }
+
+        public List<SelectLocation> GetSelectLocationFilter(int userId, int filterId)
+        {
+            var result = new List<SelectLocation>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.SelectLocationFilters.Where(x =>
+                    x.UserId == userId
+                    && x.UserFilterId == filterId
+                    && x.Active == true).Select(x => new SelectLocation { SelectLocationId= x.LocationId }).ToList();
+                if (data != null)
+                {
+                    return data;
+                }
+            }
+            return result;
+        }
+
+        public List<SelectAuto> GetSelectAutoFilter(int userId, int filterId)
+        {
+            var result = new List<SelectAuto>();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.SelectAutoClasses.Where(x =>
+                    x.UserId == userId
+                    && x.UserFilterId == filterId
+                    && x.Active == true).Select(x => new SelectAuto { SelectAutoId = x.AutoClassId }).ToList();
+                if (data != null)
+                {
+                    return data;
+                }
             }
             return result;
         }

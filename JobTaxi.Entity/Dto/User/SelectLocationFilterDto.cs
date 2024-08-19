@@ -1,11 +1,9 @@
 ﻿namespace JobTaxi.Entity.Dto.User
 {
-    public class SelectLocationFilterDto
+    public class SelectLocationFilterDto: BaseDto
     {
-        public int LocationId { get; set; }
-
-        public int UserId { get; set; }
-
-        public int UserFilterId { get; set; }
+        public List<int> LocationIds  { get; set; }
+        public int       UserId       { get; set; }
+        public int       UserFilterId { get; set; }
     }
 }
