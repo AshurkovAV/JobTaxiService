@@ -94,8 +94,32 @@ namespace JobTaxiService.Controllers.User
                     ParkPercent = usersFilterDto.ParkPercent,
                     FilterUserId = usersFilterDto.FilterUserId,
                     IsPush = usersFilterDto.IsPush
-
                 });
+
+                if (usersFilterDto.AutoClass != null)
+                {
+                    foreach (var item in usersFilterDto.AutoClass)
+                    {
+                        var resultdata = _jobRepository.CreateSelectAutoClass(new SelectAutoClass
+                        {
+                            AutoClassId = item,
+                            UserId = usersFilterDto.FilterUserId,
+                            UserFilterId = resultData.Id
+                        });
+                    }
+                }
+                if (usersFilterDto.LocationFilter != null)
+                {
+                    foreach (var item in usersFilterDto.LocationFilter)
+                    {
+                        var resultdata = _jobRepository.CreateSelectLocationFilter(new SelectLocationFilter
+                        {
+                            LocationId = item,
+                            UserId = usersFilterDto.FilterUserId,
+                            UserFilterId = resultData.Id
+                        });
+                    }
+                }
                 usersFilterDto.Id = resultData.Id;
                 result = usersFilterDto;
                 return new ObjectResult(result) { StatusCode = StatusCodes.Status201Created }; ;
