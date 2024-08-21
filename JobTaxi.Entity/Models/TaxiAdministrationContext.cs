@@ -83,6 +83,12 @@ public partial class TaxiAdministrationContext : DbContext
 
     public virtual DbSet<SelectPark> SelectParks { get; set; }
 
+    public virtual DbSet<T1> T1s { get; set; }
+
+    public virtual DbSet<T2> T2s { get; set; }
+
+    public virtual DbSet<T3> T3s { get; set; }
+
     public virtual DbSet<Update> Updates { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -1287,6 +1293,51 @@ public partial class TaxiAdministrationContext : DbContext
             entity.Property(e => e.UserId).HasColumnName("user_id");
         });
 
+        modelBuilder.Entity<T1>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("T1");
+
+            entity.Property(e => e.A).HasColumnName("a");
+            entity.Property(e => e.B).HasColumnName("b");
+            entity.Property(e => e.X)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("x");
+        });
+
+        modelBuilder.Entity<T2>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("T2");
+
+            entity.Property(e => e.A).HasColumnName("a");
+            entity.Property(e => e.B).HasColumnName("b");
+            entity.Property(e => e.X)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("x");
+        });
+
+        modelBuilder.Entity<T3>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("T3");
+
+            entity.Property(e => e.A).HasColumnName("a");
+            entity.Property(e => e.B).HasColumnName("b");
+            entity.Property(e => e.X)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("x");
+        });
+
         modelBuilder.Entity<Update>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk__updates");
@@ -1509,6 +1560,7 @@ public partial class TaxiAdministrationContext : DbContext
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("is_push");
             entity.Property(e => e.ParkPercent).HasColumnName("park_percent");
+            entity.Property(e => e.Ransom).HasColumnName("ransom");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")

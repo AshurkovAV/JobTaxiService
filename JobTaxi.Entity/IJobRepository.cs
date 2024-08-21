@@ -37,7 +37,9 @@ namespace JobTaxi.Entity
         public IEnumerable<UsersFilter> GetUsersFilterToUserId(int userId);
         public Offer CreateUpdateOffer(Offer offer);
         public SelectAutoClass CreateSelectAutoClass(SelectAutoClass selectAutoClass);
+        public bool DeleteSelectAutoClass(SelectAutoClass selectAutoClass);
         public SelectLocationFilter CreateSelectLocationFilter(SelectLocationFilter selectLocationFilter);
+        public bool DeleteSelectLocationFilter(SelectLocationFilter selectLocationFilter);
         public UsersFilter CreateUpdateUsersFilter(UsersFilter usersFilter);
         public bool FilterIsPush(int filterId, bool push);
         public int GetFilterCountAll(int userId);

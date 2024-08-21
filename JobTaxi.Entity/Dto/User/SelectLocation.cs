@@ -2,6 +2,7 @@
 {
     public class SelectLocation
     {
+        public int Id { get; set; }
         public int SelectLocationId { get; set; }
     }
 }

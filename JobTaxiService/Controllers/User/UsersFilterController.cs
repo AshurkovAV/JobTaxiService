@@ -88,21 +88,32 @@ namespace JobTaxiService.Controllers.User
                 _logger.LogInformation("CreateUsersFilter");
                 var resultData = _jobRepository.CreateUpdateUsersFilter(new UsersFilter
                 {
+                    Id = usersFilterDto.Id,
                     FilterName = usersFilterDto.FilterName,
                     AddressLatitude = usersFilterDto.AddressLatitude,
                     AddressLongitude = usersFilterDto.AddressLongitude,
                     ParkPercent = usersFilterDto.ParkPercent,
                     FilterUserId = usersFilterDto.FilterUserId,
-                    IsPush = usersFilterDto.IsPush
+                    IsPush = usersFilterDto.IsPush,
+                    Ransom = usersFilterDto.Ransom,
                 });
 
                 if (usersFilterDto.AutoClass != null)
                 {
+                    if (usersFilterDto.Id != null && usersFilterDto.Id != 0)
+                    {
+                        var resultdata = _jobRepository.DeleteSelectAutoClass(new SelectAutoClass
+                        {                          
+                            UserId = usersFilterDto.FilterUserId,
+                            UserFilterId = resultData.Id
+                        });
+                    }
                     foreach (var item in usersFilterDto.AutoClass)
                     {
                         var resultdata = _jobRepository.CreateSelectAutoClass(new SelectAutoClass
                         {
-                            AutoClassId = item,
+                            Id = item.Id,
+                            AutoClassId = item.SelectAutoId,
                             UserId = usersFilterDto.FilterUserId,
                             UserFilterId = resultData.Id
                         });
@@ -114,7 +125,8 @@ namespace JobTaxiService.Controllers.User
                     {
                         var resultdata = _jobRepository.CreateSelectLocationFilter(new SelectLocationFilter
                         {
-                            LocationId = item,
+                            Id = item.Id,
+                            LocationId = item.SelectLocationId,
                             UserId = usersFilterDto.FilterUserId,
                             UserFilterId = resultData.Id
                         });

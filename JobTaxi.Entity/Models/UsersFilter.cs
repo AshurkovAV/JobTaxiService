@@ -30,4 +30,6 @@ public partial class UsersFilter
     public DateTime UpdatedAt { get; set; }
 
     public string UpdatedBy { get; set; } = null!;
+
+    public bool Ransom { get; set; }
 }

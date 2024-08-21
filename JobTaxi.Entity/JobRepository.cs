@@ -892,6 +892,25 @@ namespace JobTaxi.Entity
             return result;
         }
 
+        public bool DeleteSelectAutoClass(SelectAutoClass selectAutoClass)
+        {            
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.SelectAutoClasses.Where(x =>                   
+                    x.UserId == selectAutoClass.UserId
+                    && x.UserFilterId == selectAutoClass.UserFilterId
+                    && x.Active == true);
+                if (data != null)
+                {
+                    
+                    db.SelectAutoClasses.UpdateRange(data);
+                    db.Entry(data).State = EntityState.Modified;
+                }   
+                db.SaveChanges();                
+            }
+            return true;
+        }
+
         public SelectLocationFilter CreateSelectLocationFilter(SelectLocationFilter selectLocationFilter)
         {
             var result = new SelectLocationFilter();
@@ -920,8 +939,29 @@ namespace JobTaxi.Entity
             var result = new UsersFilter();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
-                db.UsersFilters.Add(usersFilter);
-                db.Entry(usersFilter).State = EntityState.Added;
+                if (usersFilter.Id != null && usersFilter.Id != 0)
+                {
+                    var data = db.UsersFilters.FirstOrDefault(
+                        x => x.Id == usersFilter.Id
+                        && x.Active == true);
+                    if (data != null)
+                    {
+                        data.AddressLatitude = usersFilter.AddressLatitude;
+                        data.AddressLongitude = usersFilter.AddressLongitude;
+                        data.ParkPercent = usersFilter.ParkPercent;
+                        data.FilterName = usersFilter.FilterName;
+                        data.FilterUserId = usersFilter.FilterUserId;
+                        data.IsPush = usersFilter.IsPush;
+                        data.Ransom = usersFilter.Ransom;
+
+                        db.UsersFilters.Update(data);
+                        db.Entry(data).State = EntityState.Modified;
+                    }
+                }
+                else {
+                    db.UsersFilters.Add(usersFilter);
+                    db.Entry(usersFilter).State = EntityState.Added;
+                }
 
                 db.SaveChanges();
                 result = usersFilter;
@@ -937,7 +977,7 @@ namespace JobTaxi.Entity
                 var data = db.SelectLocationFilters.Where(x =>
                     x.UserId == userId
                     && x.UserFilterId == filterId
-                    && x.Active == true).Select(x => new SelectLocation { SelectLocationId= x.LocationId }).ToList();
+                    && x.Active == true).Select(x => new SelectLocation { Id = x.Id, SelectLocationId= x.LocationId }).ToList();
                 if (data != null)
                 {
                     return data;
@@ -954,7 +994,7 @@ namespace JobTaxi.Entity
                 var data = db.SelectAutoClasses.Where(x =>
                     x.UserId == userId
                     && x.UserFilterId == filterId
-                    && x.Active == true).Select(x => new SelectAuto { SelectAutoId = x.AutoClassId }).ToList();
+                    && x.Active == true).Select(x => new SelectAuto { Id = x.Id, SelectAutoId = x.AutoClassId }).ToList();
                 if (data != null)
                 {
                     return data;
