@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/JobTaxi.Entity/Models/T1.cs
+/JobTaxi.Entity/Models/T2.cs
+/JobTaxi.Entity/Models/T3.cs
