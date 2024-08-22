@@ -901,8 +901,7 @@ namespace JobTaxi.Entity
                     && x.UserFilterId == selectAutoClass.UserFilterId
                     && x.Active == true);
                 if (data != null)
-                {
-                    
+                {                    
                     db.SelectAutoClasses.UpdateRange(data);
                     db.Entry(data).State = EntityState.Modified;
                 }   
@@ -917,8 +916,7 @@ namespace JobTaxi.Entity
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
                 var data = db.SelectLocationFilters.FirstOrDefault(x =>
-                    x.LocationId == selectLocationFilter.LocationId
-                    && x.UserId == selectLocationFilter.UserId
+                    x.UserId == selectLocationFilter.UserId
                     && x.UserFilterId == selectLocationFilter.UserFilterId
                     && x.Active == true);
                 if (data != null)
@@ -932,6 +930,27 @@ namespace JobTaxi.Entity
                 result = selectLocationFilter;
             }
             return result;
+        }
+
+        public bool DeleteSelectLocationFilter(SelectLocationFilter selectLocationFilter)
+        {
+            var result = new SelectLocationFilter();
+            using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+            {
+                var data = db.SelectLocationFilters.FirstOrDefault(x =>
+                    x.UserId == selectLocationFilter.UserId
+                    && x.UserFilterId == selectLocationFilter.UserFilterId
+                    && x.Active == true);
+                if (data != null)
+                {
+                    db.SelectLocationFilters.UpdateRange(data);
+                    db.Entry(data).State = EntityState.Modified;
+                }              
+
+                db.SaveChanges();
+                result = selectLocationFilter;
+            }
+            return true;
         }
 
         public UsersFilter CreateUpdateUsersFilter(UsersFilter usersFilter)
