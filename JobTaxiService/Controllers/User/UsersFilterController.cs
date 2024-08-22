@@ -121,6 +121,15 @@ namespace JobTaxiService.Controllers.User
                 }
                 if (usersFilterDto.LocationFilter != null)
                 {
+                    if (usersFilterDto.Id != null && usersFilterDto.Id != 0)
+                    {
+                        var resultdata = _jobRepository.DeleteSelectLocationFilter(new SelectLocationFilter
+                        {
+                            UserId = usersFilterDto.FilterUserId,
+                            UserFilterId = resultData.Id
+                        });
+                    }
+
                     foreach (var item in usersFilterDto.LocationFilter)
                     {
                         var resultdata = _jobRepository.CreateSelectLocationFilter(new SelectLocationFilter

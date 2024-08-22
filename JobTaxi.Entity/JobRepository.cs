@@ -901,9 +901,12 @@ namespace JobTaxi.Entity
                     && x.UserFilterId == selectAutoClass.UserFilterId
                     && x.Active == true);
                 if (data != null)
-                {                    
-                    db.SelectAutoClasses.UpdateRange(data);
-                    db.Entry(data).State = EntityState.Modified;
+                {
+                    foreach (var item in data)
+                    {
+                        item.Active = false;
+                        db.SelectAutoClasses.Update(item);
+                    }
                 }   
                 db.SaveChanges();                
             }
@@ -934,21 +937,22 @@ namespace JobTaxi.Entity
 
         public bool DeleteSelectLocationFilter(SelectLocationFilter selectLocationFilter)
         {
-            var result = new SelectLocationFilter();
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
-                var data = db.SelectLocationFilters.FirstOrDefault(x =>
+                var data = db.SelectLocationFilters.Where(x =>
                     x.UserId == selectLocationFilter.UserId
                     && x.UserFilterId == selectLocationFilter.UserFilterId
                     && x.Active == true);
                 if (data != null)
                 {
-                    db.SelectLocationFilters.UpdateRange(data);
-                    db.Entry(data).State = EntityState.Modified;
+                    foreach (var item in data)
+                    {
+                        item.Active = false;
+                        db.SelectLocationFilters.Update(item);
+                    }                    
                 }              
 
-                db.SaveChanges();
-                result = selectLocationFilter;
+                db.SaveChanges();            
             }
             return true;
         }
