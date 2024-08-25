@@ -2,7 +2,7 @@
 
 namespace JobTaxi.Entity.Dto.Park
 {
-    public class ParkQueryDto
+    public class ParkQueryDto:BaseDto
     {
         public int                    UserId          { get; set; }
         public List<SelectAuto>?      AutoClass       { get; set; }
