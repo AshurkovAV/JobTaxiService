@@ -1,6 +1,7 @@
 ﻿using Azure;
 using JobTaxi.Entity.Dto;
 using JobTaxi.Entity.Dto.Nsi;
+using JobTaxi.Entity.Dto.Park;
 using JobTaxi.Entity.Dto.User;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Models;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Text.Json.Serialization;
 using System.Transactions;
 
@@ -348,8 +350,33 @@ namespace JobTaxi.Entity
             {
                 using (TaxiAdministrationContext db = new TaxiAdministrationContext())
                 {
-                    var parks = db.Parks.Count();
+                    var parks = db.Parks.Count(x => x.Active == true);
                     result = parks;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Processing {0}", ex.Message);
+            }
+            return result;
+        }
+        public int GetParksCountAll(ParkQueryDto parkQueryDto)
+        {
+            int result = 0;
+            try
+            {
+                using (TaxiAdministrationContext db = new TaxiAdministrationContext())
+                {
+                    var ids = parkQueryDto.AutoClass.Select(x=>x.SelectAutoId);
+                    var datacars = db.Cars.Where(x =>
+                                    x.Active == true
+                                    && ids.Contains(x.CatalogAutoClassId))
+                                    .AsQueryable();
+
+                    var parks = (from park in db.Parks
+                                join car in datacars on park.Id equals car.ParkId
+                                select park).ToList();
+                    result = parks.Count();
                 }
             }
             catch (Exception ex)
@@ -919,9 +946,10 @@ namespace JobTaxi.Entity
             using (TaxiAdministrationContext db = new TaxiAdministrationContext())
             {
                 var data = db.SelectLocationFilters.FirstOrDefault(x =>
-                    x.UserId == selectLocationFilter.UserId
+                       x.LocationId   == selectLocationFilter.LocationId
+                    && x.UserId       == selectLocationFilter.UserId
                     && x.UserFilterId == selectLocationFilter.UserFilterId
-                    && x.Active == true);
+                    && x.Active       == true);
                 if (data != null)
                 {
                     return data;
@@ -1000,7 +1028,14 @@ namespace JobTaxi.Entity
                 var data = db.SelectLocationFilters.Where(x =>
                     x.UserId == userId
                     && x.UserFilterId == filterId
-                    && x.Active == true).Select(x => new SelectLocation { Id = x.Id, SelectLocationId= x.LocationId }).ToList();
+                    && x.Active == true).Select(x => 
+                    new SelectLocation 
+                    { Id = x.Id, 
+                        SelectLocationId= x.LocationId,
+                        NameLocation = (from loc in db.Locatioin1s
+                                    where loc.CatId == x.LocationId
+                                    select loc.CatName).FirstOrDefault()
+                    }).ToList();
                 if (data != null)
                 {
                     return data;

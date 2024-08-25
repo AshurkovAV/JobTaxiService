@@ -43,6 +43,8 @@ namespace JobTaxiService.Controllers.User
             var resultData = _jobRepository.GetUsersFilterToUserId(userId);
             foreach (var item in resultData)
             {
+                var resultDataLocation = _jobRepository.GetSelectLocationFilter(userId, item.Id);
+                
                 result.Add(new UsersFilterDto
                 {
                     Id = item.Id,
@@ -51,7 +53,9 @@ namespace JobTaxiService.Controllers.User
                     AddressLongitude = item.AddressLongitude,
                     FilterUserId = item.FilterUserId,
                     ParkPercent = item.ParkPercent,
-                    IsPush = item.IsPush
+                    IsPush = item.IsPush,
+                    Ransom = item.Ransom,
+                    LocationFilter = resultDataLocation
                 });
             }            
             return result;

@@ -3,6 +3,8 @@ using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Dto;
+using JobTaxi.Entity.Dto.User;
+using JobTaxi.Entity.Dto.Park;
 
 namespace JobTaxiService.Controllers
 {
@@ -113,6 +115,16 @@ namespace JobTaxiService.Controllers
         {
             _logger.LogInformation("GetParkCount");
             var resultParks = _jobRepository.GetParksCountAll();
+            return resultParks;
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("count/")]
+        public async Task<int> GetCountPost([FromBody] ParkQueryDto parkQueryDto)
+        {
+            _logger.LogInformation("PostParkCount");
+            var resultParks = _jobRepository.GetParksCountAll(parkQueryDto);
             return resultParks;
         }
     }

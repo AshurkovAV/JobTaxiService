@@ -1,5 +1,6 @@
 ﻿using JobTaxi.Entity.Dto;
 using JobTaxi.Entity.Dto.Nsi;
+using JobTaxi.Entity.Dto.Park;
 using JobTaxi.Entity.Dto.User;
 using JobTaxi.Entity.Models;
 
@@ -12,6 +13,7 @@ namespace JobTaxi.Entity
         public IEnumerable<ParkTruncated> GetParksTruncated(int rows, int page, int userId);
         public IEnumerable<ParkTruncated> GetParksTruncatedToUserId(int rows, int page, int userId);
         public int GetParksCountAll();
+        public int GetParksCountAll(ParkQueryDto parkQueryDto);
         public IEnumerable<int> GetParksIdAll();
         public IEnumerable<CatalogAutoClass> GetCatalogAutoClasses();
         public IEnumerable<Car> GetCar();
