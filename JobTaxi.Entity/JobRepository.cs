@@ -375,7 +375,10 @@ namespace JobTaxi.Entity
 
                     var parks = (from park in db.Parks
                                 join car in datacars on park.Id equals car.ParkId
-                                select park).ToList();
+                                where park.Ransom == parkQueryDto.Ransom
+                                && park.Active == true
+                                group park by park.Id into g
+                                select  new { g.Key }).ToList();
                     result = parks.Count();
                 }
             }
