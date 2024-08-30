@@ -7,7 +7,7 @@ namespace JobTaxi.Entity.Dto
         public int Id { get; set; }
         public string ParkGuid { get; set; }
         public string ParkName { get; set; } = null!;
-        public string ParkAddress { get; set; } = null!; 
+        public string ParkAddress { get; set; } = null!;
         public string? AddressLatitude { get; set; }
         public string? AddressLongitude { get; set; }
         public double ParkPercent { get; set; }
@@ -32,9 +32,9 @@ namespace JobTaxi.Entity.Dto
 
 
         public DateTime CreatedAt { get; set; }
-       
+
         public string ParkPhone { get; set; } = null!;
-         public byte[] CarAvatar { get; set; }
+        public byte [] CarAvatar { get; set; }
         public int CountCars { get; set; }
         public int CountDrive { get; set; }
         public int CountWork { get; set; }

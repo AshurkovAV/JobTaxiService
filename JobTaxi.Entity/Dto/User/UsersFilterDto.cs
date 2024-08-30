@@ -8,7 +8,7 @@ public partial class UsersFilterDto :BaseDto
     public string?                   AddressLongitude        { get; set; }
     public double?                   ParkPercent             { get; set; }
     public int                       FilterUserId            { get; set; }
-    public bool                      IsPush                  { get; set; } = true;
+    public bool?                     IsPush                  { get; set; } = true;
     public List<SelectAuto>?         AutoClass               { get; set; }
     public List<SelectLocation>?     LocationFilter          { get; set; }
     public bool                      Ransom                  { get; set; }

@@ -11,6 +11,7 @@ builder.Services.AddRazorPages();
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 //Внедряем зависимость
 builder.Services.AddSingleton<IJobRepository, JobRepository>();
 builder.Services.AddSingleton<IDataService, DataService>();

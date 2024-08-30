@@ -3,6 +3,7 @@ using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Dto;
+using System.IO;
 
 namespace JobTaxiService.Controllers
 {
@@ -68,6 +69,44 @@ namespace JobTaxiService.Controllers
             _logger.LogInformation("GetCarCount");
             var resultCars = _jobRepository.GetCarsCountAll(parkId);
             return resultCars;
+        }
+
+        [HttpGet]
+        [Produces("image/webp")]
+        [Route("ThumbPicture/")]
+        public async Task<IActionResult> GetThumbPicture(int parkId)
+        {
+            _logger.LogInformation("GetThumbPicture");
+            var cars = _jobRepository.GetCar(parkId);
+            if (cars != null)
+            {
+                if (cars.Count() > 0)
+                {
+                    var pic = _jobRepository.GetCarsPicture()?.FirstOrDefault(x => x.ThumbPicture != null)?.ThumbPicture;
+                    var response = File(pic, "image/webp"); // FileStreamResult
+                    return response;                    
+                }
+            }
+            return null;
+        }
+
+        [HttpGet]
+        [Produces("image/webp")]
+        [Route("picture/")]
+        public async Task<IActionResult> GetPicture(int parkId)
+        {
+            _logger.LogInformation("GetThumbPicture");
+            var cars = _jobRepository.GetCar(parkId);
+            if (cars != null)
+            {
+                if (cars.Count() > 0)
+                {
+                    var pic = _jobRepository.GetCarsPicture()?.FirstOrDefault(x => x.Picture != null)?.Picture;
+                    var response = File(pic, "image/webp"); // FileStreamResult
+                    return response;
+                }
+            }
+            return null;
         }
     }
 }

@@ -5,6 +5,12 @@ using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Dto;
 using JobTaxi.Entity.Dto.User;
 using JobTaxi.Entity.Dto.Park;
+using JobTaxiService.Common;
+using System;
+using System.Drawing.Imaging;
+using System.Drawing;
+using Kaliko.ImageLibrary;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace JobTaxiService.Controllers
 {
@@ -78,6 +84,22 @@ namespace JobTaxiService.Controllers
             var result = new List<ParkTruncated>();
             _logger.LogInformation("GetParksTruncated");
             var resultParks = _jobRepository.GetParksTruncatedToUserId(rows, page, userId);
+            foreach (var park in resultParks)
+            {
+                var cars = _jobRepository.GetCar(park.Id);
+                if (cars != null)
+                {
+                    park.Cars = new List<Car>();
+                    park.Cars.AddRange(cars);
+                    
+                    if (cars.Count() > 0)
+                    {
+                        var pic = _jobRepository.GetCarsPicture()?.FirstOrDefault(x=>x.ThumbPicture != null)?.ThumbPicture;
+                        park.CarAvatar = pic;
+                        
+                    }
+                }
+            }
             result = (List<ParkTruncated>)resultParks;
             return result;
         }

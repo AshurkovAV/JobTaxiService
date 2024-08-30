@@ -788,10 +788,9 @@ namespace JobTaxi.Entity
                 foreach (var p in parks) {
                     carspic.Add(new CarsPicture
                     { Id = p.Id,
-                    CarId = p.CarId,
-                    Picture = p.Picture
-                    
-                    
+                    CarId = p.CarId,     
+                    Picture = p.Picture,
+                    ThumbPicture = p.ThumbPicture                    
                     });
 
                 }
