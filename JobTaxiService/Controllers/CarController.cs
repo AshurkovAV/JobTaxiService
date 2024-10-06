@@ -3,7 +3,7 @@ using JobTaxi.Entity.Models;
 using Microsoft.AspNetCore.Mvc;
 using JobTaxi.Entity.Log;
 using JobTaxi.Entity.Dto;
-using System.IO;
+using System.Text;
 
 namespace JobTaxiService.Controllers
 {
@@ -73,18 +73,22 @@ namespace JobTaxiService.Controllers
 
         [HttpGet]
         [Produces("image/webp")]
-        [Route("ThumbPicture/")]
+        [Route("ThumbPicture/{parkId:int}")]
         public async Task<IActionResult> GetThumbPicture(int parkId)
         {
             _logger.LogInformation("GetThumbPicture");
             var cars = _jobRepository.GetCar(parkId);
-            if (cars != null)
+            if (cars != null && cars.Count() != 0)
             {
                 if (cars.Count() > 0)
                 {
                     var pic = _jobRepository.GetCarsPicture()?.FirstOrDefault(x => x.ThumbPicture != null)?.ThumbPicture;
-                    var response = File(pic, "image/webp"); // FileStreamResult
-                    return response;                    
+                    if (pic != null)
+                    {
+                        var so = Convert.FromBase64String(Encoding.ASCII.GetString(pic));
+                        var response = File(so, "image/webp");
+                        return response;
+                    }
                 }
             }
             return null;
@@ -92,18 +96,23 @@ namespace JobTaxiService.Controllers
 
         [HttpGet]
         [Produces("image/webp")]
-        [Route("picture/")]
+        [Route("picture/{parkId:int}")]
         public async Task<IActionResult> GetPicture(int parkId)
         {
-            _logger.LogInformation("GetThumbPicture");
+            _logger.LogInformation("GetThumbPicture");           
+            
             var cars = _jobRepository.GetCar(parkId);
             if (cars != null)
             {
                 if (cars.Count() > 0)
                 {
                     var pic = _jobRepository.GetCarsPicture()?.FirstOrDefault(x => x.Picture != null)?.Picture;
-                    var response = File(pic, "image/webp"); // FileStreamResult
-                    return response;
+                    if (pic != null)
+                    {
+                        var so = Convert.FromBase64String(Encoding.ASCII.GetString(pic));
+                        var response = File(so, "image/webp"); 
+                        return response;
+                    }                    
                 }
             }
             return null;
