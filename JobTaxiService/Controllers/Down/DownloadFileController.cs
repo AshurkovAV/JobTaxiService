@@ -27,11 +27,12 @@ namespace JobTaxiService.Controllers.Toffers
             // Afterwards file is converted into a stream
             string pathRoot = Directory.GetCurrentDirectory();
             _logger.LogInformation("DownloadFileController   " + pathRoot);
-            var path = Path.Combine(pathRoot, "strartplus.TaxiStartApp.apk");
+            // var path = Path.Combine(pathRoot, "strartplus.TaxiStartApp.apk");
+            var path = Path.Combine("D:\\Down", "MATLAB R2017b [PC] [x64].zip");
             var fs = new FileStream(path, FileMode.Open);
 
             // Return the file. A byte array can also be used instead of a stream
-            return File(fs, "application/octet-stream", "strartplus.TaxiStartApp.apk");
+            return File(fs, "application/octet-stream", "MATLAB R2017b [PC] [x64].zip");
         }    
 
         
